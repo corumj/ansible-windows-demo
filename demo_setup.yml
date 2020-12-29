@@ -42,13 +42,16 @@
     - name: Create AWS Machine Credential 
       awx.awx.tower_credential:
         state: present 
-        name: AWS Machine 
-        description: AWS Machine Credential 
+        name: AWS Windows Machine 
+        description: AWS Windows Machine Credential 
         organization: Default 
         credential_type: Machine 
         inputs:
-          username: ec2-user 
+          username: Administrator
           password: "{{ win_initial_password }}"
+          become_method: runas 
+          become_user: Administrator 
+          become_password: "{{ win_initial_password }}"
         tower_username: "{{ tower_username }}"
         tower_password: "{{ tower_password }}"
         tower_host: https://localhost
@@ -86,7 +89,7 @@
         name: windows 
         inventory: AWS  
         variables:
-          # ansible_winrm_server_cert_validation: ignore
+          ansible_winrm_server_cert_validation: ignore
           # ansible_winrm_transport: ntlm
           # ansible_winrm_kerberos_delegation: yes
           # ansible_winrm_read_timeout_sec: 120
