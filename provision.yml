@@ -8,7 +8,7 @@
   tasks:
     - name: Get Instance facts 
       block:
-        - name: Get Instances facts
+        - name: Get Instance facts
           community.aws.ec2_instance_info:
             aws_access_key: "{{ lookup('env', 'AWS_ACCESS_KEY_ID') }}"
             aws_secret_key: "{{ lookup('env', 'AWS_SECRET_ACCESS_KEY') }}"
@@ -18,7 +18,7 @@
         - name: Instance id
           debug:
             msg: "ID: {{ item.instance_id }} - State: {{ item.state.name }} - Public DNS: {{ item.public_dns_name }}"
-          with_dict: "{{ result.instances }}"
+          loop: "{{ result.instances }}"
 
       tags: always 
 
