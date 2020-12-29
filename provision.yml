@@ -54,7 +54,7 @@
             state: present
             aws_access_key: "{{ lookup('env', 'AWS_ACCESS_KEY_ID') }}"
             aws_secret_key: "{{ lookup('env', 'AWS_SECRET_ACCESS_KEY') }}"
-            key_name: "{{ aws_key_name }}"
+            # key_name: "{{ aws_key_name }}"
             name: "ad-{{ id }}"
             security_group: "{{ sg_out.group_id }}"
             image_id: "{{ aws_ami }}"
@@ -72,7 +72,7 @@
             state: present
             aws_access_key: "{{ lookup('env', 'AWS_ACCESS_KEY_ID') }}"
             aws_secret_key: "{{ lookup('env', 'AWS_SECRET_ACCESS_KEY') }}"
-            key_name: "{{ aws_key_name }}"
+            # key_name: "{{ aws_key_name }}"
             name: "app1-{{ id }}"
             security_group: "{{ sg_out.group_id }}"
             image_id: "{{ aws_ami }}"
@@ -90,7 +90,7 @@
             state: present
             aws_access_key: "{{ lookup('env', 'AWS_ACCESS_KEY_ID') }}"
             aws_secret_key: "{{ lookup('env', 'AWS_SECRET_ACCESS_KEY') }}"
-            key_name: "{{ aws_key_name }}"
+            # key_name: "{{ aws_key_name }}"
             name: "app2-{{ id }}"
             security_group: "{{ sg_out.group_id }}"
             image_id: "{{ aws_ami }}"
@@ -125,5 +125,12 @@
             aws_secret_key: "{{ lookup('env', 'AWS_SECRET_ACCESS_KEY') }}"
             filters:
               "tag:app": "{{ app }}"
+
+        - name: Create security group 
+          amazon.aws.ec2_group: 
+            name: "{{ id }}-sec-group"
+            description: Inbound WinRM and RDP 
+            region: "{{ region }}"
+            state: absent
 
       tags: ['never', 'deprovision']
