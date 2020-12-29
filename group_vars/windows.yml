@@ -1,7 +1,4 @@
 ---
-# This will randomly generate a password for the windows servers
-win_initial_password: "{{ lookup('password','/dev/null length=15') }}"
-
 # These should be pretty static
 ansible_winrm_server_cert_validation: ignore
 ansible_winrm_transport: ntlm

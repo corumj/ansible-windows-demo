@@ -2,6 +2,9 @@
 # update this with your name or something unique to you, and your ec2 key pair name 
 name: jerry
 
+# This will randomly generate a password for the windows servers
+win_initial_password: "{{ lookup('password','/dev/null length=15') }}"
+
 # static, please don't change these unless you want a challenge
 region: us-east-1 
 app: ansible_windows_demo_{{ name }}
