@@ -10,12 +10,6 @@
           - 'private.yml'
           - 'login_info.yml'
 
-    # - name: Make sure Python module for AWS is installed 
-    #   pip:
-    #     name: boto3
-    #     state: present 
-    #     executable: pip3.6
-
     - name: Create Ansible Windows Ops demo Tower Project
       awx.awx.tower_project:
         name: Windows Ops
@@ -44,16 +38,6 @@
         tower_password: "{{ tower_password }}"
         tower_host: https://localhost
         tower_verify_ssl: false
-
-    # - name: Generate AWS Keypair 
-    #   amazon.aws.ec2_key: 
-    #     name: "{{ aws_key_name }}"
-    #     state: present
-    #     region: "{{ region }}"
-    #     aws_access_key: "{{ AWS_ACCESS_KEY_ID }}"
-    #     aws_secret_key: "{{ AWS_SECRET_ACCESS_KEY }}"
-    #     security_token: "{{ AWS_SECURITY_TOKEN }}"
-    #   register: ssh_key
 
     - name: Create AWS Machine Credential 
       awx.awx.tower_credential:
@@ -97,6 +81,16 @@
         tower_host: https://localhost
         tower_verify_ssl: false
 
+    - name: Create the Windows group 
+      awx.awx.tower_group: 
+        name: windows 
+        inventory: AWS  
+        state: present 
+        tower_username: "{{ tower_username }}"
+        tower_password: "{{ tower_password }}"
+        tower_host: https://localhost
+        tower_verify_ssl: false
+        
     - name: Create provisioning template
       awx.awx.tower_job_template:
         name: "Provision EC2 Instance"
