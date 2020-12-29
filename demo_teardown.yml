@@ -116,3 +116,10 @@
         security_token: "{{ AWS_SECURITY_TOKEN }}"
         filters:
           "tag:app": "{{ app }}"
+
+    - name: Remove security group 
+      amazon.aws.ec2_group: 
+        name: "{{ id }}-sec-group"
+        description: Inbound WinRM and RDP 
+        region: "{{ region }}"
+        state: absent
