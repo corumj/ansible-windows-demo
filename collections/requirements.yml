@@ -1,0 +1,5 @@
+---   
+---
+collections:
+  - community.aws
+  - awx.awx
