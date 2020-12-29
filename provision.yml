@@ -103,9 +103,9 @@
             wait: no
           register: app2_ec2 
 
-        - name: print these variables
-          debug:
-            var: app2_ec2 
+        - name: Update AWS Inventory
+          awx.awx.tower_inventory_source_update:
+            name: AWS  
 
         - name: Wait for WinRM to answer on all hosts 
           wait_for:
@@ -113,9 +113,9 @@
             host: "{{ item }}"
             timeout: 300 
           loop:
-            - ad_ec2.instances[0].public_ip_address
-            - app1_ec2.instances[0].public_ip_address
-            - app2_ec2.instances[0].public_ip_address
+            - "{{ ad_ec2.instances[0].public_ip_address }}"
+            - "{{ app1_ec2.instances[0].public_ip_address }}"
+            - "{{ app2_ec2.instances[0].public_ip_address }}"
           
       tags: ['never', 'provision']
 
@@ -130,7 +130,7 @@
             filters:
               "tag:app": "{{ app }}"
 
-        - name: Create security group 
+        - name: Remove security group 
           amazon.aws.ec2_group: 
             name: "{{ id }}-sec-group"
             description: Inbound WinRM and RDP 
