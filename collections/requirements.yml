@@ -1,4 +1,5 @@
 ---
 collections:
   - community.aws
+  - amazon.aws
   - awx.awx

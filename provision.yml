@@ -26,7 +26,7 @@
       block:
 
         - name: Create security group 
-          community.aws.ec2_group: 
+          amazon.aws.ec2_group: 
             name: "{{ id }}-sec-group"
             description: Inbound WinRM and RDP 
             region: "{{ region }}"
@@ -46,6 +46,7 @@
             rules_egress:
               - proto: -1 
                 cidr_ip: 0.0.0.0/0 
+            state: present
           register: sg_out 
 
         - name: Provision AD Server Instance 
