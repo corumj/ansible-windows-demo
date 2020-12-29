@@ -107,6 +107,10 @@
           awx.awx.tower_inventory_source_update:
             name: AWS  
             inventory: AWS
+            tower_username: "{{ tower_username }}"
+            tower_password: "{{ tower_password }}"
+            tower_host: https://localhost
+            tower_verify_ssl: false
 
         - name: Update the Windows group with the new hosts
           awx.awx.tower_group: 
