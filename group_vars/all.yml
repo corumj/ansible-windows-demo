@@ -1,0 +1,10 @@
+---
+# update this with your name or something unique to you, and your ec2 key pair name 
+name: jerry
+
+# static, please don't change these unless you want a challenge
+region: us-east-1 
+app: ansible_windows_demo_{{ name }}
+aws_key_name: windows-demo-key-{{ name }}
+aws_ami: ami-0229f7666f517b31e
+aws_instance_type: t2.micro  

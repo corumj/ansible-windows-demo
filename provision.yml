@@ -1,0 +1,85 @@
+---
+- name: Provision instance to deploy app
+  hosts: localhost
+  connection: local
+  gather_facts: false
+  vars:
+    id: "windows-demo-app-{{ name }}"
+  tasks:
+    - name: Get Instance facts 
+      block:
+        - name: Get Instances facts
+          community.aws.ec2_instance_info:
+            aws_access_key: "{{ lookup('env', 'AWS_ACCESS_KEY_ID') }}"
+            aws_secret_key: "{{ lookup('env', 'AWS_SECRET_ACCESS_KEY') }}"
+            region: "{{ region }}"
+          register: result
+
+        - name: Instance id
+          debug:
+            msg: "ID: {{ item.instance_id }} - State: {{ item.state.name }} - Public DNS: {{ item.public_dns_name }}"
+          with_dict: "{{ result.instances }}"
+
+      tags: always 
+
+    - name: Provision EC2 Instances
+      block:
+        - name: Provision AD Server Instance 
+          community.aws.ec2_instance:
+            state: present
+            aws_access_key: "{{ lookup('env', 'AWS_ACCESS_KEY_ID') }}"
+            aws_secret_key: "{{ lookup('env', 'AWS_SECRET_ACCESS_KEY') }}"
+            key_name: "{{ aws_key_name }}"
+            name: "ad-{{ id }}"
+            security_group: default
+            image_id: "{{ aws_ami }}"
+            instance_type: "{{ aws_instance_type }}"
+            region: "{{ region }}"
+            tags: 
+              app: "{{ app }}"
+              function: ad_server
+
+        - name: Provision Windows Server Instance App 1
+          community.aws.ec2_instance:
+            state: present
+            aws_access_key: "{{ lookup('env', 'AWS_ACCESS_KEY_ID') }}"
+            aws_secret_key: "{{ lookup('env', 'AWS_SECRET_ACCESS_KEY') }}"
+            key_name: "{{ aws_key_name }}"
+            name: "app1-{{ id }}"
+            security_group: default
+            image_id: "{{ aws_ami }}"
+            instance_type: "{{ aws_instance_type }}"
+            region: "{{ region }}"
+            tags: 
+              app: "{{ app }}"
+              function: app1
+
+        - name: Provision Windows Server Instance App 2
+          community.aws.ec2_instance:
+            state: present
+            aws_access_key: "{{ lookup('env', 'AWS_ACCESS_KEY_ID') }}"
+            aws_secret_key: "{{ lookup('env', 'AWS_SECRET_ACCESS_KEY') }}"
+            key_name: "{{ aws_key_name }}"
+            name: "app2-{{ id }}"
+            security_group: default
+            image_id: "{{ aws_ami }}"
+            instance_type: "{{ aws_instance_type }}"
+            region: "{{ region }}"
+            tags: 
+              app: "{{ app }}"
+              function: app2
+          
+      tags: ['never', 'provision']
+
+    - name: Deprovision ec2 instance
+      block:
+        - name: Remove EC2 Instance 
+          community.aws.ec2_instance:
+            state: absent
+            region: "{{ region }}"
+            aws_access_key: "{{ lookup('env', 'AWS_ACCESS_KEY_ID') }}"
+            aws_secret_key: "{{ lookup('env', 'AWS_SECRET_ACCESS_KEY') }}"
+            filters:
+              "tag:app": "{{ app }}"
+
+      tags: ['never', 'deprovision']
