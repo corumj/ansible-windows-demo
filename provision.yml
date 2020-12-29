@@ -106,6 +106,7 @@
         - name: Update AWS Inventory
           awx.awx.tower_inventory_source_update:
             name: AWS  
+            inventory: AWS
 
         - name: Update the Windows group with the new hosts
           awx.awx.tower_group: 
