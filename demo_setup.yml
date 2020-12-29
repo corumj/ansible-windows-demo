@@ -85,6 +85,13 @@
       awx.awx.tower_group: 
         name: windows 
         inventory: AWS  
+        variables:
+          # ansible_winrm_server_cert_validation: ignore
+          # ansible_winrm_transport: ntlm
+          # ansible_winrm_kerberos_delegation: yes
+          # ansible_winrm_read_timeout_sec: 120
+          ansible_port: 5986
+          ansible_connection: winrm
         state: present 
         tower_username: "{{ tower_username }}"
         tower_password: "{{ tower_password }}"
@@ -100,6 +107,7 @@
         playbook: "provision.yml"
         credentials: 
           - "AWS Console"
+          - "Tower Credential"
         job_tags: "provision"
         state: "present"
         tower_username: "{{ tower_username }}"
