@@ -64,7 +64,7 @@
               app: "{{ app }}"
               function: ad_server
             user_data: "{{ lookup('template', 'userdata.txt.j2') }}"
-            wait: no
+            wait: yes
           register: ad_ec2 
 
         - name: Provision Windows Server Instance App 1
@@ -82,7 +82,7 @@
               app: "{{ app }}"
               function: app1
             user_data: "{{ lookup('template', 'userdata.txt.j2') }}"
-            wait: no
+            wait: yes
           register: app1_ec2 
 
         - name: Provision Windows Server Instance App 2
@@ -100,7 +100,7 @@
               app: "{{ app }}"
               function: app2
             user_data: "{{ lookup('template', 'userdata.txt.j2') }}"
-            wait: no
+            wait: yes
           register: app2_ec2 
 
         - name: Update AWS Inventory
