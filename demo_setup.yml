@@ -1,0 +1,132 @@
+--- 
+- name: Setup Demo Environment
+  hosts: localhost
+  connection: local
+  tasks:
+    - name: import login credentials for Tower
+      include_vars: "{{lookup('first_found', login_info)}}"
+      vars:
+        login_info:
+          - 'private.yml'
+          - 'login_info.yml'
+
+    - name: Make sure Python module for AWS is installed 
+      pip:
+        name: boto3
+        state: present 
+        executable: pip3.6
+
+    - name: Create Ansible Windows Ops demo Tower Project
+      awx.awx.tower_project:
+        name: Windows Ops
+        state: present
+        organization: Default 
+        tower_username: "{{ tower_username }}"
+        tower_password: "{{ tower_password }}"
+        tower_host: https://localhost
+        tower_verify_ssl: false
+        scm_type: git 
+        scm_url: https://github.com/corumj/ansible-windows-demo.git
+        scm_update_on_launch: yes 
+
+    - name: Create AWS Credential 
+      awx.awx.tower_credential:
+        state: present
+        name: AWS Console
+        description: AWS Credential from saml 
+        organization: Default 
+        credential_type: Amazon Web Services
+        inputs:
+          username: "{{ AWS_ACCESS_KEY_ID }}"
+          password: "{{ AWS_SECRET_ACCESS_KEY }}"
+          security_token: "{{ AWS_SECURITY_TOKEN }}"
+        tower_username: "{{ tower_username }}"
+        tower_password: "{{ tower_password }}"
+        tower_host: https://localhost
+        tower_verify_ssl: false
+
+    # - name: Generate AWS Keypair 
+    #   amazon.aws.ec2_key: 
+    #     name: "{{ aws_key_name }}"
+    #     state: present
+    #     region: "{{ region }}"
+    #     aws_access_key: "{{ AWS_ACCESS_KEY_ID }}"
+    #     aws_secret_key: "{{ AWS_SECRET_ACCESS_KEY }}"
+    #     security_token: "{{ AWS_SECURITY_TOKEN }}"
+    #   register: ssh_key
+
+    - name: Create AWS Machine Credential 
+      awx.awx.tower_credential:
+        state: present 
+        name: AWS Machine 
+        description: AWS Machine Credential 
+        organization: Default 
+        credential_type: Machine 
+        inputs:
+          username: ec2-user 
+          password: "{{ win_initial_password }}"
+        tower_username: "{{ tower_username }}"
+        tower_password: "{{ tower_password }}"
+        tower_host: https://localhost
+        tower_verify_ssl: false
+
+    - name: Create AWS Inventory 
+      awx.awx.tower_inventory: 
+        name: AWS
+        description: AWS Inventory 
+        organization: Default 
+        state: present 
+        tower_username: "{{ tower_username }}"
+        tower_password: "{{ tower_password }}"
+        tower_host: https://localhost
+        tower_verify_ssl: false
+
+    - name: Create AWS Inventory Source
+      awx.awx.tower_inventory_source:
+        state: present  
+        name: AWS 
+        description: AWS inventory source 
+        inventory: AWS  
+        credential: AWS Console  
+        # instance_filters: "tag:app={{ app }}"
+        overwrite: True  
+        update_on_launch: True  
+        source: ec2  
+        tower_username: "{{ tower_username }}"
+        tower_password: "{{ tower_password }}"
+        tower_host: https://localhost
+        tower_verify_ssl: false
+
+    - name: Create provisioning template
+      awx.awx.tower_job_template:
+        name: "Provision EC2 Instance"
+        job_type: "run"
+        inventory: "AWS"
+        project: "Windows Ops"
+        playbook: "provision.yml"
+        credentials: 
+          - "AWS Console"
+        job_tags: "provision"
+        state: "present"
+        tower_username: "{{ tower_username }}"
+        tower_password: "{{ tower_password }}"
+        tower_host: https://localhost
+        tower_verify_ssl: false
+
+    - name: Create deprovisioning template
+      awx.awx.tower_job_template:
+        name: "Deprovision EC2 Instance"
+        job_type: "run"
+        inventory: "AWS"
+        project: "Windows Ops"
+        playbook: "provision.yml"
+        credentials: 
+          - "AWS Console"
+        job_tags: "deprovision"
+        state: "present"
+        tower_username: "{{ tower_username }}"
+        tower_password: "{{ tower_password }}"
+        tower_host: https://localhost
+        tower_verify_ssl: false
+
+ 

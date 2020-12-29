@@ -1,0 +1,13 @@
+---
+# defaults file for windows-ad-controller
+dns_domain_name: "test.rhlabs.net"
+domain_admin_password: "Ansible!!1"
+
+# Users and Password to Create
+users_password: "Ansible!1"        # MUST FOLLOW WINDOWS AD PASSWORD RULES
+users:
+  - jerry
+
+# Details for reverse DNS lookup
+ptr_zone_name: "102.0.10.in-addr.arpa"
+ptr_zone_cidr: "10.0.102.0/24"

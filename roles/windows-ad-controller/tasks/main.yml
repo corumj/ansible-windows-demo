@@ -1,0 +1,153 @@
+---
+- name: Install AD-Domain-Services
+  win_feature:
+    name: AD-Domain-Services
+    state: present
+    include_management_tools: True
+    include_sub_features: True
+  register: winfeature
+
+- name: Reboot if needed
+  win_reboot:
+  when: winfeature.reboot_required
+  ignore_errors: true
+  
+- name: Install DNS
+  win_feature:
+    name: DNS
+    state: present
+    include_management_tools: True
+  register: windnsfeature
+
+- name: Reboot if needed
+  win_reboot:
+  when: windnsfeature.reboot_required
+  ignore_errors: true
+
+- name: Create DNS Domain
+  win_domain:
+    dns_domain_name: "{{ dns_domain_name }}"
+    safe_mode_password: "{{ domain_admin_password }}"
+  register: windomain
+
+- name: Reboot if needed
+  win_reboot:
+    reboot_timeout: 600
+  when: windomain.reboot_required
+  ignore_errors: true
+
+- name: Sleep 3 minutes after reboot from DNS configuration
+  pause:
+    minutes: 3
+  when: windomain.reboot_required
+
+- name: Promote to Domain Controller
+  win_domain_controller:
+    dns_domain_name: "{{ dns_domain_name }}"
+    domain_admin_user: "Administrator@{{ dns_domain_name }}"
+    domain_admin_password: "{{ domain_admin_password }}"
+    safe_mode_password: "{{ domain_admin_password }}"
+    state: domain_controller
+    log_path: c:\ansible_win_domain_controller.txt
+  register: windc
+
+- name: Reboot if needed
+  win_reboot:
+  when: windc.reboot_required
+  ignore_errors: true
+
+- name: Sleep 60 seconds before adding windows group... sigh...
+  pause:
+    minutes: 1
+  when: windc.changed
+
+- name: Ensure AD services are started - will fail if install not complete
+  win_service:
+    name: "{{ item }}"
+    state: started
+    start_mode: auto
+  with_items:
+    - adws
+    - dns
+
+- name: Get current DNS zones
+  win_shell: Get-DnsServerZone | Select ZoneName
+  changed_when: false
+  register: dnsserverzone
+
+- name: Set Reverse Lookup Zone - fails first time
+  win_shell: Add-DnsServerPrimaryZone -NetworkId "{{ ptr_zone_cidr }}" -DynamicUpdate Secure -ReplicationScope Domain
+  when: "ptr_zone_name not in dnsserverzone.stdout"
+  register: result
+  until: result is success
+  retries: 5
+  delay: 60
+
+- name: Get A records for zone
+  win_shell: Get-DnsServerResourceRecord -ZoneName {{ dns_domain_name }} -RRType A | Format-Table -AutoSize -Wrap
+  changed_when: false
+  register: arecords
+
+- name: Get PTR Records for zone
+  win_shell: Get-DnsServerResourceRecord -ZoneName {{ ptr_zone_name }} -RRType PTR | Format-Table -AutoSize -Wrap
+  register: ptr_records
+
+- name: Set PTR Record for each host
+  win_shell: Add-DnsServerResourceRecordPtr -Name "{{ hostvars[item]['ansible_host'].split('.')[3] }}" -ZoneName "{{ ptr_zone_name }}" -AllowUpdateAny -TimeToLive 01:00:00 -AgeRecord -PtrDomainName "{{ item + '.' + dns_domain_name}}"
+  #when: "item not in ptr_records.stdout"
+  when: ptr_records.stdout.find(item|lower) == -1
+  with_items: "{{groups.all}}"
+  register: ptr_results
+  failed_when: 
+    - "'ResourceExists' not in ptr_results.stderr"
+    - "ptr_results.rc != 0"
+
+- name: Add windows group
+  win_domain_group:
+    name: Ansible Users
+    scope: global
+
+- name: Add windows domain admin
+  win_domain_user:
+    name: "Admin"
+    upn: "Admin@{{ dns_domain_name }}"
+    state: present
+    enabled: yes
+    account_locked: no
+    groups:
+      - Domain Admins
+    password: "{{ domain_admin_password }}"
+    update_password: on_create
+    password_expired: false
+    firstname: admin
+    surname: user
+    company: AnsibleByRedHat
+    email: "Admin@{{ dns_domain_name }}"
+
+- name: Add windows AD users
+  win_domain_user:
+    name: "{{ item }}"
+    upn: "{{ item }}@{{ dns_domain_name }}"
+    state: present
+    enabled: yes
+    account_locked: no
+    groups:
+      - Ansible Users
+    password: "{{ users_password }}"
+    update_password: on_create
+    password_expired: false
+    firstname: user
+    surname: user
+    company: AnsibleByRedHat
+    email: "{{ item }}@{{ dns_domain_name }}"
+  with_items:
+    - "{{ users }}"
+
+- name: Get current DNS search string
+  win_shell: Get-DnsClientGlobalSetting | Select SuffixSearchList
+  changed_when: false
+  register: suffixsearchlist
+
+- name: Set DNS search string
+  win_shell: Set-DnsClientGlobalSetting -SuffixSearchList {{ dns_domain_name }}, ec2.internal
+  when: "dns_domain_name not in suffixsearchlist.stdout"
