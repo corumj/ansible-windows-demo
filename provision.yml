@@ -110,12 +110,12 @@
         - name: Wait for WinRM to answer on all hosts 
           wait_for:
             port: 5986
-            host: "{{ item.instances[0].public_ip_address }}"
+            host: "{{ item.public_ip_address }}"
             timeout: 300 
           loop:
-            - ad_ec2
-            - app1_ec2
-            - app2_ec2
+            - ad_ec2.instances[0]
+            - app1_ec2.instances[0]
+            - app2_ec2.instances[0]
           
       tags: ['never', 'provision']
 
