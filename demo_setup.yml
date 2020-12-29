@@ -10,11 +10,11 @@
           - 'private.yml'
           - 'login_info.yml'
 
-    - name: Make sure Python module for AWS is installed 
-      pip:
-        name: boto3
-        state: present 
-        executable: pip3.6
+    # - name: Make sure Python module for AWS is installed 
+    #   pip:
+    #     name: boto3
+    #     state: present 
+    #     executable: pip3.6
 
     - name: Create Ansible Windows Ops demo Tower Project
       awx.awx.tower_project:
