@@ -118,9 +118,6 @@
               - "{{ app1_ec2.instances[0].public_ip_address }}"
               - "{{ app2_ec2.instances[0].public_ip_address }}"            
             state: present 
-            tower_username: "{{ tower_username }}"
-            tower_password: "{{ tower_password }}"
-            tower_host: https://localhost
             tower_verify_ssl: false
 
         - name: Wait for WinRM to answer on all hosts 
