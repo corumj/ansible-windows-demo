@@ -1,5 +1,6 @@
 ---
 collections:
   - community.aws
+  - ansible.windows
   - amazon.aws
   - awx.awx
