@@ -24,6 +24,30 @@
 
     - name: Provision EC2 Instances
       block:
+
+        - name: Create security group 
+          community.aws.ec2_group: 
+            name: "{{ id }}-sec-group"
+            description: Inbound WinRM and RDP 
+            region: "{{ region }}"
+            rules:
+              - proto: tcp
+                from_port: 80
+                to_port: 80 
+                cidr_ip: 0.0.0.0/0
+              - proto: tcp 
+                from_port: 5986 
+                to_port: 5986 
+                cidr_ip: 0.0.0.0/0  
+              - proto: tcp
+                from_port: 3389 
+                to_port: 3389 
+                cidr_ip: 0.0.0.0/0 
+            rules_egress:
+              - proto: -1 
+                cidr_ip: 0.0.0.0/0 
+          register: sg_out 
+
         - name: Provision AD Server Instance 
           community.aws.ec2_instance:
             state: present
@@ -31,13 +55,16 @@
             aws_secret_key: "{{ lookup('env', 'AWS_SECRET_ACCESS_KEY') }}"
             key_name: "{{ aws_key_name }}"
             name: "ad-{{ id }}"
-            security_group: default
+            security_group: "{{ sg_out.group_id }}"
             image_id: "{{ aws_ami }}"
             instance_type: "{{ aws_instance_type }}"
             region: "{{ region }}"
             tags: 
               app: "{{ app }}"
               function: ad_server
+            user_data: "{{ lookup('template', 'userdata.txt.j2') }}"
+            wait: no
+          register: ad_ec2 
 
         - name: Provision Windows Server Instance App 1
           community.aws.ec2_instance:
@@ -46,13 +73,16 @@
             aws_secret_key: "{{ lookup('env', 'AWS_SECRET_ACCESS_KEY') }}"
             key_name: "{{ aws_key_name }}"
             name: "app1-{{ id }}"
-            security_group: default
+            security_group: "{{ sg_out.group_id }}"
             image_id: "{{ aws_ami }}"
             instance_type: "{{ aws_instance_type }}"
             region: "{{ region }}"
             tags: 
               app: "{{ app }}"
               function: app1
+            user_data: "{{ lookup('template', 'userdata.txt.j2') }}"
+            wait: no
+          register: app1_ec2 
 
         - name: Provision Windows Server Instance App 2
           community.aws.ec2_instance:
@@ -61,13 +91,26 @@
             aws_secret_key: "{{ lookup('env', 'AWS_SECRET_ACCESS_KEY') }}"
             key_name: "{{ aws_key_name }}"
             name: "app2-{{ id }}"
-            security_group: default
+            security_group: "{{ sg_out.group_id }}"
             image_id: "{{ aws_ami }}"
             instance_type: "{{ aws_instance_type }}"
             region: "{{ region }}"
             tags: 
               app: "{{ app }}"
               function: app2
+            user_data: "{{ lookup('template', 'userdata.txt.j2') }}"
+            wait: no
+          register: app2_ec2 
+
+        - name: Wait for WinRM to answer on all hosts 
+          wait_for:
+            port: 5986
+            host: "{{ item.public_ip_address }}"
+            timeout: 300 
+          loop:
+            - ad_ec2
+            - app1_ec2
+            - app2_ec2
           
       tags: ['never', 'provision']
 
