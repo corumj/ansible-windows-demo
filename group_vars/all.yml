@@ -3,7 +3,7 @@
 name: jerry
 
 # This will randomly generate a password for the windows servers
-win_initial_password: RedHat1! # "{{ lookup('password','/dev/null length=15') }}"
+win_initial_password: "{{ lookup('password','/dev/null length=15') }}"
 
 # static, please don't change these unless you want a challenge
 region: us-east-1 
