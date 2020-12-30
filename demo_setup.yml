@@ -131,4 +131,16 @@
         tower_host: https://localhost
         tower_verify_ssl: false
 
- 
+    - name: Create Windows Update job template
+      tower_job_template:
+        name: "Windows Updates"
+        job_type: run
+        inventory: AWS
+        project: "Windows Admin Tasks"
+        playbook: windows_updates.yml
+        credential: "{{ credentials }}"
+        limit: "tag_app_{{ app }}"
+        state: present
+        tower_config_file: "~/.tower_cli.cfg"
+        survey_enabled: yes
+        survey_spec: "{{ lookup('file', 'windows_update_survey.json') }}"
