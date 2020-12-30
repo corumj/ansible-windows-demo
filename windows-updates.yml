@@ -1,6 +1,7 @@
 ---
 - name: Windows Updates
   hosts: all
+  gather_facts: no
   tasks:
     - name: Install Windows Updates
       win_updates:
