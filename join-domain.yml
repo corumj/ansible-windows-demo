@@ -1,0 +1,4 @@
+- name: Join server to the domain
+  hosts: tag_function_app1,tag_function_app2
+  roles:
+  - join-domain

@@ -148,3 +148,19 @@
         tower_password: "{{ tower_password }}"
         tower_host: https://localhost
         tower_verify_ssl: false
+
+    - name: Create Domain Controller job template
+      awx.awx.tower_job_template:
+        name: "Create Domain Controller"
+        job_type: run 
+        inventory: AWS   
+        project: Windows Ops  
+        playbook: windows-ad-controller.yml  
+        credentials:
+          - " AWS Windows Machine"
+        limit: tag_function_ad_server
+        state: present 
+        tower_username: "{{ tower_username }}"
+        tower_password: "{{ tower_password }}"
+        tower_host: https://localhost
+        tower_verify_ssl: false        

@@ -1,0 +1,24 @@
+- name: configure DNS Client 
+  ansible.windows.win_dns_client:
+    adapter_names: "*"
+    ipv4_addresses:
+    - "{{ dns_server1 }}"
+  register: joined
+
+- pause:
+    minutes: 1
+  when: joined.changed
+
+- name: Add Windows Server to the Domain
+  ansible.windows.win_domain_membership:
+    dns_domain_name: demo.local
+    domain_admin_user: test\admin
+    domain_admin_password: "{{ domain_admin_password }}"
+    state: domain
+  register: domain_state
+
+- name: Reboot Server if required
+  ansible.windows.win_reboot:
+  ignore_errors: true
+  when: domain_state.reboot_required
+

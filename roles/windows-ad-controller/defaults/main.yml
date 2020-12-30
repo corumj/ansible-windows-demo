@@ -9,5 +9,5 @@ users:
   - "{{ name }}"  # will pull your name from group_vars/all.yml for consistency
 
 # Details for reverse DNS lookup
-ptr_zone_name: "102.0.10.in-addr.arpa"
-ptr_zone_cidr: "10.0.102.0/24"
+ptr_zone_name: "172.31.0.in-addr.arpa"
+ptr_zone_cidr: "172.31.0.0/16"
