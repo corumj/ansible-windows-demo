@@ -107,6 +107,7 @@
           awx.awx.tower_inventory_source_update:
             name: AWS  
             inventory: AWS
+            wait: True
             tower_verify_ssl: false
 
         - name: Update the Windows group with the new hosts
