@@ -10,4 +10,4 @@ region: us-east-1
 app: ansible_windows_demo_{{ name }}
 aws_key_name: windows-demo-key-{{ name }}
 aws_ami: ami-0229f7666f517b31e
-aws_instance_type: t2.micro  
+aws_instance_type: t2.medium  # sort of works with micro but times out when you try ANYTHING 
