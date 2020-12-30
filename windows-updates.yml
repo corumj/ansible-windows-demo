@@ -1,5 +1,5 @@
 ---
-- name: This is my Windows patching playbook
+- name: Windows Updates
   hosts: all
   tasks:
     - name: Install Windows Updates
