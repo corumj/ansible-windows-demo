@@ -1,0 +1,4 @@
+- name: Create Domain Controller and Domain
+  hosts: tag_function_ad_server
+  roles:
+  - windows-ad-controller
