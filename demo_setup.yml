@@ -137,7 +137,7 @@
         job_type: run
         inventory: AWS
         project: "Windows Ops"
-        playbook: windows_updates.yml
+        playbook: windows-updates.yml
         credentials:
           - "AWS Windows Machine"
         limit: "tag_app_{{ app }}"
