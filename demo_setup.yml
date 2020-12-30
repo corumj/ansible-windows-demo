@@ -142,6 +142,9 @@
           - "AWS Windows Machine"
         limit: "tag_app_{{ app }}"
         state: present
-        tower_config_file: "~/.tower_cli.cfg"
         survey_enabled: yes
         survey_spec: "{{ lookup('file', 'windows_update_survey.json') }}"
+        tower_username: "{{ tower_username }}"
+        tower_password: "{{ tower_password }}"
+        tower_host: https://localhost
+        tower_verify_ssl: false
