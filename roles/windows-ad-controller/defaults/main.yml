@@ -1,12 +1,12 @@
 ---
 # defaults file for windows-ad-controller
-dns_domain_name: "test.rhlabs.net"
+dns_domain_name: "demo.local"
 domain_admin_password: "Ansible!!1"
 
 # Users and Password to Create
 users_password: "Ansible!1"        # MUST FOLLOW WINDOWS AD PASSWORD RULES
 users:
-  - jerry
+  - "{{ name }}"  # will pull your name from group_vars/all.yml for consistency
 
 # Details for reverse DNS lookup
 ptr_zone_name: "102.0.10.in-addr.arpa"

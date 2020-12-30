@@ -4,5 +4,5 @@ ansible_winrm_server_cert_validation: ignore
 ansible_winrm_transport: ntlm
 # ansible_winrm_kerberos_delegation: yes
 ansible_winrm_read_timeout_sec: 120
-ansible_port: 5985
+ansible_port: 5986
 ansible_connection: winrm
