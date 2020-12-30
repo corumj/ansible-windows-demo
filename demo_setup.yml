@@ -50,7 +50,7 @@
           username: Administrator
           password: "{{ win_initial_password }}"
           become_method: runas 
-          become_user: Administrator 
+          become_username: Administrator 
           become_password: "{{ win_initial_password }}"
         tower_username: "{{ tower_username }}"
         tower_password: "{{ tower_password }}"
@@ -89,12 +89,9 @@
         name: windows 
         inventory: AWS  
         variables:
-          ansible_winrm_server_cert_validation: ignore
-          # ansible_winrm_transport: ntlm
-          # ansible_winrm_kerberos_delegation: yes
-          # ansible_winrm_read_timeout_sec: 120
           ansible_port: 5986
           ansible_connection: winrm
+          ansible_winrm_server_cert_validation: ignore
         state: present 
         tower_username: "{{ tower_username }}"
         tower_password: "{{ tower_password }}"
