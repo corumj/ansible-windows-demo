@@ -132,13 +132,14 @@
         tower_verify_ssl: false
 
     - name: Create Windows Update job template
-      tower_job_template:
+      awx.awx.tower_job_template:
         name: "Windows Updates"
         job_type: run
         inventory: AWS
         project: "Windows Ops"
         playbook: windows_updates.yml
-        credential: "{{ credentials }}"
+        credentials:
+          - "AWS Windows Machine"
         limit: "tag_app_{{ app }}"
         state: present
         tower_config_file: "~/.tower_cli.cfg"
