@@ -157,7 +157,7 @@
         project: Windows Ops  
         playbook: windows-ad-controller.yml  
         credentials:
-          - " AWS Windows Machine"
+          - "AWS Windows Machine"
         limit: tag_function_ad_server
         state: present 
         tower_username: "{{ tower_username }}"
