@@ -204,10 +204,15 @@
             name: "{{ id }}-sec-group"
             description: Inbound WinRM and RDP 
             region: "{{ region }}"
+            aws_access_key: "{{ lookup('env', 'AWS_ACCESS_KEY_ID') }}"
+            aws_secret_key: "{{ lookup('env', 'AWS_SECRET_ACCESS_KEY') }}"
             state: absent
 
         - name: retrieve vpc ID                 
           amazon.aws.ec2_vpc_net_info:
+            region: "{{ region }}"
+            aws_access_key: "{{ lookup('env', 'AWS_ACCESS_KEY_ID') }}"
+            aws_secret_key: "{{ lookup('env', 'AWS_SECRET_ACCESS_KEY') }}"
             filters:
               "tag:Name": "{{ id }}-vpc"
           register: vpc_info 
