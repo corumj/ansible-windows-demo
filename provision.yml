@@ -60,7 +60,7 @@
             state: present
             aws_access_key: "{{ lookup('env', 'AWS_ACCESS_KEY_ID') }}"
             aws_secret_key: "{{ lookup('env', 'AWS_SECRET_ACCESS_KEY') }}"
-          register: external-sg
+          register: external_sg
 
         - name: Create security group internal
           amazon.aws.ec2_group: 
@@ -87,7 +87,7 @@
             state: present
             aws_access_key: "{{ lookup('env', 'AWS_ACCESS_KEY_ID') }}"
             aws_secret_key: "{{ lookup('env', 'AWS_SECRET_ACCESS_KEY') }}"
-          register: internal-sg
+          register: internal_sg
 
         - name: Create a subnet on the VPC for our apps
           amazon.aws.ec2_vpc_subnet:
@@ -108,8 +108,8 @@
             aws_secret_key: "{{ lookup('env', 'AWS_SECRET_ACCESS_KEY') }}"
             name: "ad-{{ id }}"
             security_groups: 
-              - "{{ external-sg.group_id }}"
-              - "{{ internal-sg.group_id }}"
+              - "{{ external_sg.group_id }}"
+              - "{{ internal_sg.group_id }}"
             image_id: "{{ aws_ami }}"
             instance_type: "{{ aws_instance_type }}"
             region: "{{ region }}"
