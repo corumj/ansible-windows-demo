@@ -113,6 +113,7 @@
             aws_secret_key: "{{ lookup('env', 'AWS_SECRET_ACCESS_KEY') }}"
             name: "ad-{{ id }}"
             security_group: "{{ internal_sg.group_name }}"
+            vpc_subnet_id: "{{ demo_vpc.vpc.id }}"
             image_id: "{{ aws_ami }}"
             instance_type: "{{ aws_instance_type }}"
             region: "{{ region }}"
@@ -131,6 +132,7 @@
             name: "app1-{{ id }}"
             security_groups: 
               - "{{ internal_sg.group_id }}"
+            vpc_subnet_id: "{{ demo_vpc.vpc.id }}"
             image_id: "{{ aws_ami }}"
             instance_type: "{{ aws_instance_type }}"
             region: "{{ region }}"
@@ -149,6 +151,7 @@
             name: "app2-{{ id }}"
             security_groups: 
               - "{{ internal_sg.group_id }}"
+            vpc_subnet_id: "{{ demo_vpc.vpc.id }}"
             image_id: "{{ aws_ami }}"
             instance_type: "{{ aws_instance_type }}"
             region: "{{ region }}"
