@@ -105,14 +105,14 @@
         - name: Print sg info 
           debug: 
             var: internal_sg
-            
+
         - name: Provision AD Server Instance 
           community.aws.ec2_instance:
             state: present
             aws_access_key: "{{ lookup('env', 'AWS_ACCESS_KEY_ID') }}"
             aws_secret_key: "{{ lookup('env', 'AWS_SECRET_ACCESS_KEY') }}"
             name: "ad-{{ id }}"
-            security_group: "{{ internal_sg.group_id }}"
+            security_group: "{{ internal_sg.group_name }}"
             image_id: "{{ aws_ami }}"
             instance_type: "{{ aws_instance_type }}"
             region: "{{ region }}"
