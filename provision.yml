@@ -81,7 +81,7 @@
             aws_secret_key: "{{ lookup('env', 'AWS_SECRET_ACCESS_KEY') }}"
             # key_name: "{{ aws_key_name }}"
             name: "ad-{{ id }}"
-            security_group: "{{ sg_out.group_id }}"
+            # security_group: "{{ sg_out.group_id }}"
             image_id: "{{ aws_ami }}"
             instance_type: "{{ aws_instance_type }}"
             region: "{{ region }}"
