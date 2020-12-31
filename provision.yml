@@ -218,7 +218,7 @@
         - name: Delete the subnet on the VPC  
           amazon.aws.ec2_vpc_subnet:
             vpc_id: "{{ vpc_info.vpcs[0].vpc_id }}"
-            cidr: 10.0.1.16/28
+            cidr: 10.0.0.0/16
             tags:
               Name: "{{ id }}-subnet"
             region: "{{ region }}"
