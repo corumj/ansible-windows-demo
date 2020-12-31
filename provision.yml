@@ -206,10 +206,16 @@
             region: "{{ region }}"
             state: absent
 
+        - name: retrieve vpc ID                 
+          amazon.aws.ec2_vpc_net_info:
+            filters:
+              "tag:Name": "{{ id }}-vpc"
+          register: vpc_info 
+
         - name: Delete the subnet on the VPC  
           amazon.aws.ec2_vpc_subnet:
-            # vpc_id: "{{ demo_vpc.id }}"
-            # cidr: 10.0.1.16/28
+            vpc_id: "{{ vpc_info.id }}"
+            cidr: 10.0.1.16/28
             tags:
               Name: "{{ id }}-subnet"
             region: "{{ region }}"
