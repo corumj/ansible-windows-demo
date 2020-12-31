@@ -127,8 +127,8 @@
             aws_secret_key: "{{ lookup('env', 'AWS_SECRET_ACCESS_KEY') }}"
             name: "app1-{{ id }}"
             security_groups: 
-              - "{{ external-sg.group_id }}"
-              - "{{ internal-sg.group_id }}"
+              - "{{ external_sg.group_id }}"
+              - "{{ internal_sg.group_id }}"
             image_id: "{{ aws_ami }}"
             instance_type: "{{ aws_instance_type }}"
             region: "{{ region }}"
@@ -144,11 +144,10 @@
             state: present
             aws_access_key: "{{ lookup('env', 'AWS_ACCESS_KEY_ID') }}"
             aws_secret_key: "{{ lookup('env', 'AWS_SECRET_ACCESS_KEY') }}"
-            # key_name: "{{ aws_key_name }}"
             name: "app2-{{ id }}"
             security_groups: 
-              - "{{ external-sg.group_id }}"
-              - "{{ internal-sg.group_id }}"
+              - "{{ external_sg.group_id }}"
+              - "{{ internal_sg.group_id }}"
             image_id: "{{ aws_ami }}"
             instance_type: "{{ aws_instance_type }}"
             region: "{{ region }}"
