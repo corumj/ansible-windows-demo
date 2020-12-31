@@ -36,9 +36,9 @@
             state: present
           register: demo_vpc
 
-        - name: Create security group 
+        - name: Create security group external
           amazon.aws.ec2_group: 
-            name: "{{ id }}-sec-group"
+            name: "{{ id }}-sec-group-external"
             description: Inbound WinRM and RDP 
             region: "{{ region }}"
             rules:
@@ -57,11 +57,37 @@
             rules_egress:
               - proto: -1 
                 cidr_ip: 0.0.0.0/0 
+            state: present
+            aws_access_key: "{{ lookup('env', 'AWS_ACCESS_KEY_ID') }}"
+            aws_secret_key: "{{ lookup('env', 'AWS_SECRET_ACCESS_KEY') }}"
+          register: external-sg
+
+        - name: Create security group internal
+          amazon.aws.ec2_group: 
+            name: "{{ id }}-sec-group-internal"
+            description: Inbound WinRM and RDP 
+            region: "{{ region }}"
+            rules:
+              - proto: tcp
+                from_port: 80
+                to_port: 80 
+                cidr_ip: 10.0.0.0/16
+              - proto: tcp 
+                from_port: 5986 
+                to_port: 5986 
+                cidr_ip: 10.0.0.0/16 
+              - proto: tcp
+                from_port: 3389 
+                to_port: 3389 
+                cidr_ip: 10.0.0.0/16
+            rules_egress:
+              - proto: -1 
+                cidr_ip: 10.0.0.0/16
             vpc_id: "{{ demo_vpc.vpc.id }}"
             state: present
             aws_access_key: "{{ lookup('env', 'AWS_ACCESS_KEY_ID') }}"
             aws_secret_key: "{{ lookup('env', 'AWS_SECRET_ACCESS_KEY') }}"
-          register: sg_out 
+          register: internal-sg
 
         - name: Create a subnet on the VPC for our apps
           amazon.aws.ec2_vpc_subnet:
@@ -80,13 +106,13 @@
             state: present
             aws_access_key: "{{ lookup('env', 'AWS_ACCESS_KEY_ID') }}"
             aws_secret_key: "{{ lookup('env', 'AWS_SECRET_ACCESS_KEY') }}"
-            # key_name: "{{ aws_key_name }}"
             name: "ad-{{ id }}"
-            security_group: "{{ sg_out.group_id }}"
+            security_groups: 
+              - "{{ external-sg.group_id }}"
+              - "{{ internal-sg.group_id }}"
             image_id: "{{ aws_ami }}"
             instance_type: "{{ aws_instance_type }}"
             region: "{{ region }}"
-            # vpc_subnet_id: "{{ demo_subnet.subnet.id }}"
             tags: 
               app: "{{ app }}"
               function: ad_server
@@ -99,13 +125,13 @@
             state: present
             aws_access_key: "{{ lookup('env', 'AWS_ACCESS_KEY_ID') }}"
             aws_secret_key: "{{ lookup('env', 'AWS_SECRET_ACCESS_KEY') }}"
-            # key_name: "{{ aws_key_name }}"
             name: "app1-{{ id }}"
-            security_group: "{{ sg_out.group_id }}"
+            security_groups: 
+              - "{{ external-sg.group_id }}"
+              - "{{ internal-sg.group_id }}"
             image_id: "{{ aws_ami }}"
             instance_type: "{{ aws_instance_type }}"
             region: "{{ region }}"
-            # vpc_subnet_id: "{{ demo_subnet.subnet.id }}"
             tags: 
               app: "{{ app }}"
               function: app1
@@ -120,11 +146,12 @@
             aws_secret_key: "{{ lookup('env', 'AWS_SECRET_ACCESS_KEY') }}"
             # key_name: "{{ aws_key_name }}"
             name: "app2-{{ id }}"
-            security_group: "{{ sg_out.group_id }}"
+            security_groups: 
+              - "{{ external-sg.group_id }}"
+              - "{{ internal-sg.group_id }}"
             image_id: "{{ aws_ami }}"
             instance_type: "{{ aws_instance_type }}"
             region: "{{ region }}"
-            # vpc_subnet_id: "{{ demo_subnet.subnet.id }}"
             tags: 
               app: "{{ app }}"
               function: app2
@@ -164,7 +191,7 @@
 
     - name: Deprovision ec2 instance
       block:
-        - name: Remove EC2 Instance 
+        - name: Remove EC2 Instances
           community.aws.ec2_instance:
             state: absent
             region: "{{ region }}"
