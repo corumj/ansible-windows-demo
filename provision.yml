@@ -39,6 +39,7 @@
         - name: Create Internet Gateway for VPC  
           community.aws.ec2_vpc_igw:
             vpc_id: "{{ demo_vpc.vpc.id }}"
+            region: "{{ region }}"
             state: present
 
         - name: Create security group internal
@@ -211,6 +212,7 @@
         - name: remove Internet Gateway for VPC  
           community.aws.ec2_vpc_igw:
             vpc_id: "{{ vpc_info.vpcs[0].vpc_id }}"
+            region: "{{ region }}"
             state: absent
 
         - name: Remove the VPC 
