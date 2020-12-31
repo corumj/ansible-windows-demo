@@ -25,6 +25,17 @@
     - name: Provision EC2 Instances
       block:
 
+        - name: create a VPC 
+          amazon.aws.ec2_vpc_net:
+            name: "{{ id }}-vpc"
+            cidr_block: 10.0.0.0/16
+            region: "{{ region }}"
+            tenancy: default
+            aws_access_key: "{{ lookup('env', 'AWS_ACCESS_KEY_ID') }}"
+            aws_secret_key: "{{ lookup('env', 'AWS_SECRET_ACCESS_KEY') }}"
+            state: present
+          register: demo_vpc
+
         - name: Create security group 
           amazon.aws.ec2_group: 
             name: "{{ id }}-sec-group"
@@ -46,21 +57,11 @@
             rules_egress:
               - proto: -1 
                 cidr_ip: 0.0.0.0/0 
+            vpc_id: "{{ demo_vpc.vpc.id }}"
             state: present
             aws_access_key: "{{ lookup('env', 'AWS_ACCESS_KEY_ID') }}"
             aws_secret_key: "{{ lookup('env', 'AWS_SECRET_ACCESS_KEY') }}"
           register: sg_out 
-
-        - name: create a VPC 
-          amazon.aws.ec2_vpc_net:
-            name: "{{ id }}-vpc"
-            cidr_block: 10.0.0.0/16
-            region: "{{ region }}"
-            tenancy: default
-            aws_access_key: "{{ lookup('env', 'AWS_ACCESS_KEY_ID') }}"
-            aws_secret_key: "{{ lookup('env', 'AWS_SECRET_ACCESS_KEY') }}"
-            state: present
-          register: demo_vpc
 
         - name: Create a subnet on the VPC for our apps
           amazon.aws.ec2_vpc_subnet:
@@ -81,13 +82,11 @@
             aws_secret_key: "{{ lookup('env', 'AWS_SECRET_ACCESS_KEY') }}"
             # key_name: "{{ aws_key_name }}"
             name: "ad-{{ id }}"
-            # security_group: "{{ sg_out.group_id }}"
+            security_group: "{{ sg_out.group_id }}"
             image_id: "{{ aws_ami }}"
             instance_type: "{{ aws_instance_type }}"
             region: "{{ region }}"
-            vpc_subnet_id: "{{ demo_subnet.subnet.id }}"
-            network:
-              assign_public_id: true
+            # vpc_subnet_id: "{{ demo_subnet.subnet.id }}"
             tags: 
               app: "{{ app }}"
               function: ad_server
@@ -106,7 +105,7 @@
             image_id: "{{ aws_ami }}"
             instance_type: "{{ aws_instance_type }}"
             region: "{{ region }}"
-            vpc_subnet_id: "{{ demo_subnet.subnet.id }}"
+            # vpc_subnet_id: "{{ demo_subnet.subnet.id }}"
             tags: 
               app: "{{ app }}"
               function: app1
@@ -125,7 +124,7 @@
             image_id: "{{ aws_ami }}"
             instance_type: "{{ aws_instance_type }}"
             region: "{{ region }}"
-            vpc_subnet_id: "{{ demo_subnet.subnet.id }}"
+            # vpc_subnet_id: "{{ demo_subnet.subnet.id }}"
             tags: 
               app: "{{ app }}"
               function: app2
