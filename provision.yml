@@ -86,6 +86,8 @@
             instance_type: "{{ aws_instance_type }}"
             region: "{{ region }}"
             vpc_subnet_id: "{{ demo_subnet.subnet.id }}"
+            network:
+              assign_public_id: true
             tags: 
               app: "{{ app }}"
               function: ad_server
