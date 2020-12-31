@@ -210,7 +210,7 @@
 
         - name: remove Internet Gateway for VPC  
           community.aws.ec2_vpc_igw:
-            vpc_id: "{{ demo_vpc.vpc.id }}"
+            vpc_id: "{{ vpc_info.vpcs[0].vpc_id }}"
             state: absent
 
         - name: Remove the VPC 
