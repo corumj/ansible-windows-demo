@@ -36,32 +36,6 @@
             state: present
           register: demo_vpc
 
-        # - name: Create security group external
-        #   amazon.aws.ec2_group: 
-        #     name: "{{ id }}-sec-group-external"
-        #     description: Inbound WinRM and RDP 
-        #     region: "{{ region }}"
-        #     rules:
-        #       - proto: tcp
-        #         from_port: 80
-        #         to_port: 80 
-        #         cidr_ip: 0.0.0.0/0
-        #       - proto: tcp 
-        #         from_port: 5986 
-        #         to_port: 5986 
-        #         cidr_ip: 0.0.0.0/0  
-        #       - proto: tcp
-        #         from_port: 3389 
-        #         to_port: 3389 
-        #         cidr_ip: 0.0.0.0/0 
-        #     rules_egress:
-        #       - proto: -1 
-        #         cidr_ip: 0.0.0.0/0 
-        #     state: present
-        #     aws_access_key: "{{ lookup('env', 'AWS_ACCESS_KEY_ID') }}"
-        #     aws_secret_key: "{{ lookup('env', 'AWS_SECRET_ACCESS_KEY') }}"
-        #   register: external_sg
-
         - name: Create security group internal
           amazon.aws.ec2_group: 
             name: "{{ id }}-sec-group-internal"
@@ -101,10 +75,6 @@
             aws_secret_key: "{{ lookup('env', 'AWS_SECRET_ACCESS_KEY') }}"
             state: present 
           register: demo_subnet
-
-        - name: Print sg info 
-          debug: 
-            var: internal_sg
 
         - name: Provision AD Server Instance 
           community.aws.ec2_instance:
