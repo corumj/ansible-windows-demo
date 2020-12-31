@@ -62,13 +62,9 @@
             state: present
           register: demo_vpc
 
-        - name: debug demo_vpc  
-          debug: 
-            var: demo_vpc   
-            
         - name: Create a subnet on the VPC for our apps
           amazon.aws.ec2_vpc_subnet:
-            vpc_id: "{{ demo_vpc.id }}"
+            vpc_id: "{{ demo_vpc.vpc.id }}"
             cidr: 10.0.1.16/28
             tags:
               Name: "{{ id }}-subnet"
@@ -88,7 +84,7 @@
             image_id: "{{ aws_ami }}"
             instance_type: "{{ aws_instance_type }}"
             region: "{{ region }}"
-            vpc_subnet_id: "{{ demo_subnet.id }}"
+            vpc_subnet_id: "{{ demo_subnet.subnet.id }}"
             tags: 
               app: "{{ app }}"
               function: ad_server
@@ -107,7 +103,7 @@
             image_id: "{{ aws_ami }}"
             instance_type: "{{ aws_instance_type }}"
             region: "{{ region }}"
-            vpc_subnet_id: "{{ demo_subnet.id }}"
+            vpc_subnet_id: "{{ demo_subnet.subnet.id }}"
             tags: 
               app: "{{ app }}"
               function: app1
@@ -126,7 +122,7 @@
             image_id: "{{ aws_ami }}"
             instance_type: "{{ aws_instance_type }}"
             region: "{{ region }}"
-            vpc_subnet_id: "{{ demo_subnet.id }}"
+            vpc_subnet_id: "{{ demo_subnet.subnet.id }}"
             tags: 
               app: "{{ app }}"
               function: app2
