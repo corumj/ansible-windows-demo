@@ -40,7 +40,10 @@
           community.aws.ec2_vpc_igw:
             vpc_id: "{{ demo_vpc.vpc.id }}"
             region: "{{ region }}"
+            tags:
+              Name: "{{ id }}-vpc-igw"
             state: present
+          register: gateway
 
         - name: Create security group internal
           amazon.aws.ec2_group: 
@@ -81,6 +84,22 @@
             aws_secret_key: "{{ lookup('env', 'AWS_SECRET_ACCESS_KEY') }}"
             state: present 
           register: demo_subnet
+
+        - name: Create a subnet route table 
+          community.aws.ec2_vpc_route_table:
+            vpc_id: "{{ demo_vpc.vpc.id }}"
+            tags: 
+              Name: "{{ id }}-vpc-rtbl"
+            subnets:
+              - "{{ demo_subnet.subnet.id }}"
+            routes:
+              - dest: 0.0.0.0/0 
+                gateway_id: "{{ gateway.gateway_id }}"
+            region: "{{ region }}"
+            aws_access_key: "{{ lookup('env', 'AWS_ACCESS_KEY_ID') }}"
+            aws_secret_key: "{{ lookup('env', 'AWS_SECRET_ACCESS_KEY') }}"
+            state: present 
+
 
         - name: Provision AD Server Instance 
           community.aws.ec2_instance:
