@@ -123,3 +123,13 @@
         description: Inbound WinRM and RDP 
         region: "{{ region }}"
         state: absent
+
+    - name: Remove the VPC 
+      amazon.aws.ec2_vpc_net:
+        name: "{{ id }}-vpc"
+        cidr_block: 10.10.0.0/16
+        region: "{{ region }}"
+        tenancy: default
+        aws_access_key: "{{ lookup('env', 'AWS_ACCESS_KEY_ID') }}"
+        aws_secret_key: "{{ lookup('env', 'AWS_SECRET_ACCESS_KEY') }}"
+        state: absent
