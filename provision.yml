@@ -45,18 +45,18 @@
               - proto: tcp
                 from_port: 80
                 to_port: 80 
-                cidr_ip: 0.0.0.0/16
+                cidr_ip: 0.0.0.0/0
               - proto: tcp 
                 from_port: 5986 
                 to_port: 5986 
-                cidr_ip: 0.0.0.0/16 
+                cidr_ip: 0.0.0.0/0
               - proto: tcp
                 from_port: 3389 
                 to_port: 3389 
-                cidr_ip: 0.0.0.0/16
+                cidr_ip: 0.0.0.0/0
             rules_egress:
               - proto: -1 
-                cidr_ip: 0.0.0.0/16
+                cidr_ip: 0.0.0.0/0
             vpc_id: "{{ demo_vpc.vpc.id }}"
             state: present
             aws_access_key: "{{ lookup('env', 'AWS_ACCESS_KEY_ID') }}"
