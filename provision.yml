@@ -68,6 +68,7 @@
             cidr: 10.0.1.16/28
             tags:
               Name: "{{ id }}-subnet"
+            region: "{{ region }}"
             aws_access_key: "{{ lookup('env', 'AWS_ACCESS_KEY_ID') }}"
             aws_secret_key: "{{ lookup('env', 'AWS_SECRET_ACCESS_KEY') }}"
             state: present 
@@ -178,12 +179,13 @@
             region: "{{ region }}"
             state: absent
 
-        - name: Create a subnet on the VPC  
+        - name: Delete the subnet on the VPC  
           amazon.aws.ec2_vpc_subnet:
             vpc_id: "{{ demo_vpc.id }}"
             cidr: 10.0.1.16/28
             tags:
               Name: "{{ id }}-subnet"
+            region: "{{ region }}"
             aws_access_key: "{{ lookup('env', 'AWS_ACCESS_KEY_ID') }}"
             aws_secret_key: "{{ lookup('env', 'AWS_SECRET_ACCESS_KEY') }}"
             state: absent 
