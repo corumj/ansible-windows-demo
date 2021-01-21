@@ -83,25 +83,25 @@
   retries: 5
   delay: 60
 
-- name: Get A records for zone
-  win_shell: Get-DnsServerResourceRecord -ZoneName {{ dns_domain_name }} -RRType A | Format-Table -AutoSize -Wrap
-  changed_when: false
-  register: arecords
+# - name: Get A records for zone
+#   win_shell: Get-DnsServerResourceRecord -ZoneName {{ dns_domain_name }} -RRType A | Format-Table -AutoSize -Wrap
+#   changed_when: false
+#   register: arecords
 
-- name: Get PTR Records for zone
-  win_shell: Get-DnsServerResourceRecord -ZoneName {{ ptr_zone_name }} -RRType PTR | Format-Table -AutoSize -Wrap
-  ignore_errors: yes
-  register: ptr_records
+# - name: Get PTR Records for zone
+#   win_shell: Get-DnsServerResourceRecord -ZoneName {{ ptr_zone_name }} -RRType PTR | Format-Table -AutoSize -Wrap
+#   ignore_errors: yes
+#   register: ptr_records
 
-- name: Set PTR Record for each host
-  win_shell: Add-DnsServerResourceRecordPtr -Name "{{ hostvars[item]['ansible_host'].split('.')[3] }}" -ZoneName "{{ ptr_zone_name }}" -AllowUpdateAny -TimeToLive 01:00:00 -AgeRecord -PtrDomainName "{{ item + '.' + dns_domain_name}}"
-  #when: "item not in ptr_records.stdout"
-  when: ptr_records.stdout.find(item|lower) == -1
-  with_items: "{{groups.all}}"
-  register: ptr_results
-  failed_when: 
-    - "'ResourceExists' not in ptr_results.stderr"
-    - "ptr_results.rc != 0"
+# - name: Set PTR Record for each host
+#   win_shell: Add-DnsServerResourceRecordPtr -Name "{{ hostvars[item]['ansible_host'].split('.')[3] }}" -ZoneName "{{ ptr_zone_name }}" -AllowUpdateAny -TimeToLive 01:00:00 -AgeRecord -PtrDomainName "{{ item + '.' + dns_domain_name}}"
+#   #when: "item not in ptr_records.stdout"
+#   when: ptr_records.stdout.find(item|lower) == -1
+#   with_items: "{{groups.all}}"
+#   register: ptr_results
+#   failed_when: 
+#     - "'ResourceExists' not in ptr_results.stderr"
+#     - "ptr_results.rc != 0"
 
 - name: Add windows group
   win_domain_group:
