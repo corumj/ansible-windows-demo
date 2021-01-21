@@ -90,6 +90,7 @@
 
 - name: Get PTR Records for zone
   win_shell: Get-DnsServerResourceRecord -ZoneName {{ ptr_zone_name }} -RRType PTR | Format-Table -AutoSize -Wrap
+  ignore_errors: yes
   register: ptr_records
 
 - name: Set PTR Record for each host
