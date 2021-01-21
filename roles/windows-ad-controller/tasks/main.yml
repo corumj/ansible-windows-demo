@@ -19,3 +19,23 @@
   win_service:
     name: w32time 
     state: started 
+
+# Only needed during install because of the restart, can enable later
+- name: Disable firewall for domain, public and private profiles 
+  win_firewall:
+    state: disabled 
+    profiles:
+      - Domain 
+      - Private 
+      - Public 
+  tags: disable_firewall 
+
+- name: Change the hostname 
+  win_hostname:
+    name: '{{ dc_hostname }}'
+  register: hostname 
+
+- name: Reboot 
+  win_reboot:
+  when: hostname.reboot_required 
+
