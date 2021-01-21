@@ -1,3 +1,8 @@
+---
+- name: print hostvars 
+  debug:
+    var: "{{ hostvars }}"
+    
 - name: configure DNS Client 
   ansible.windows.win_dns_client:
     adapter_names: "*"
