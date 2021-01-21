@@ -39,3 +39,42 @@
   win_reboot:
   when: hostname.reboot_required 
 
+- name: Install Active Directory Domain Services 
+  win_feature:
+    name: AD-Domain-Services 
+    include_management_tools: yes 
+    include_sub_features: yes 
+    state: present 
+  register: adds 
+
+- name: Create Domain 
+  win_domain:
+    dns_domain_name: '{{ domain_name }}'
+    safe_mode_password: '{{ recovery_password }}'
+  register: domain 
+
+- name: Reboot 
+  win_reboot:
+    msg: "Installing AD. Rebooting..."
+    pre_reboot_delay: 15 
+  when: domain.changed 
+
+# Make sure dc is using itself as DNS server
+# This should happen during promotion but... explicit is always better.
+
+- name: Set internal DNS server
+  win_dns_client:
+    adapter_names: '*'
+    ipv4_addresses:
+      - '127.0.0.1'
+
+# Lots of retries on this next one - it does take a while for DS
+# to finish spooling up and this cannot complete until then
+
+- name: Create reverse DNS zone 
+  win_shell: "Add-DnsServerPrimaryZone -NetworkID {{reverse_dns_zone}} -ReplicationScope Forest"
+  retries: 30
+  delay: 60 
+  register: dnszone 
+  until: dnszone is succeeded 
+
