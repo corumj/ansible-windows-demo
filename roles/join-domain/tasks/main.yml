@@ -2,7 +2,7 @@
   ansible.windows.win_dns_client:
     adapter_names: "*"
     ipv4_addresses:
-    - "{{ dns_server1 }}"
+    - "{{ hostvars[groups['tag_function_ad_server'][0]]['ansible_eth0']['ipv4']['address'] }}"
   register: joined
 
 - pause:
