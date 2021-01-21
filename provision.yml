@@ -216,20 +216,21 @@
               "tag:Name": "{{ id }}-vpc"
           register: vpc_info 
 
-        - name: Create a subnet route table 
-          community.aws.ec2_vpc_route_table:
-            vpc_id: "{{ vpc_info.vpcs[0].vpc_id }}"
-            tags: 
-              Name: "{{ id }}-vpc-rtbl"
-            subnets:
-              - "{{ demo_subnet.subnet.id }}"
-            routes:
-              - dest: 0.0.0.0/0 
-                gateway_id: "{{ gateway.gateway_id }}"
-            region: "{{ region }}"
-            aws_access_key: "{{ lookup('env', 'AWS_ACCESS_KEY_ID') }}"
-            aws_secret_key: "{{ lookup('env', 'AWS_SECRET_ACCESS_KEY') }}"
-            state: absent 
+        # not sure this is actually needed as removing the subnet seems to remove the the route table as well
+        # - name: Remove a subnet route table 
+        #   community.aws.ec2_vpc_route_table:
+        #     vpc_id: "{{ vpc_info.vpcs[0].vpc_id }}"
+        #     tags: 
+        #       Name: "{{ id }}-vpc-rtbl"
+        #     subnets:
+        #       - "{{ demo_subnet.subnet.id }}"
+        #     routes:
+        #       - dest: 0.0.0.0/0 
+        #         gateway_id: "{{ gateway.gateway_id }}"
+        #     region: "{{ region }}"
+        #     aws_access_key: "{{ lookup('env', 'AWS_ACCESS_KEY_ID') }}"
+        #     aws_secret_key: "{{ lookup('env', 'AWS_SECRET_ACCESS_KEY') }}"
+        #     state: absent 
 
         - name: Delete the subnet on the VPC  
           amazon.aws.ec2_vpc_subnet:
