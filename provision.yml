@@ -249,7 +249,11 @@
               "tag:Name": "{{ id }}-vpc-rtbl"
           register: vpc_route_info
 
-        - name: Remove a subnet route table 
+        - name: debug 
+            debug:
+              var: vpc_route_info
+
+        - name: Remove subnet route table 
           community.aws.ec2_vpc_route_table:
             vpc_id: "{{ vpc_info.vpcs[0].vpc_id }}"
             region: "{{ region }}"
