@@ -2,7 +2,16 @@
 # - name: print hostvars 
 #   debug:
 #     var: hostvars[groups['tag_function_ad_server'][0]]['ec2_private_ip_address']
-    
+
+- name: Disable firewall for domain, public and private profiles 
+  win_firewall:
+    state: disabled 
+    profiles:
+      - Domain 
+      - Private 
+      - Public 
+  tags: disable_firewall 
+
 - name: configure DNS Client 
   ansible.windows.win_dns_client:
     adapter_names: "*"
@@ -19,7 +28,7 @@
     dns_domain_name: "{{ hostvars[groups['tag_function_ad_server'][0]]['ec2_private_ip_address'] }}" # "{{ domain_name }}"
     domain_admin_user: "Admin@{{ domain_name }}"
     domain_admin_password: "{{ win_initial_password }}"
-    domain_ou_path: "OU=Windows,OU=Servers,DC=ansible,DC=vagrant"
+    domain_ou_path: "OU=Windows,OU=Servers,DC=ansible"
     state: domain
   register: domain_state
 
