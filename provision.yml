@@ -145,43 +145,43 @@
             wait: yes
           register: ad_ec2 
 
-        - name: Provision Windows Server Instance App 1
-          community.aws.ec2_instance:
-            state: present
-            aws_access_key: "{{ lookup('env', 'AWS_ACCESS_KEY_ID') }}"
-            aws_secret_key: "{{ lookup('env', 'AWS_SECRET_ACCESS_KEY') }}"
-            name: "app1-{{ id }}"
-            security_groups: 
-              - "{{ internal_sg.group_id }}"
-            vpc_subnet_id: "{{ demo_subnet.subnet.id }}"
-            image_id: "{{ aws_ami }}"
-            instance_type: "{{ aws_instance_type }}"
-            region: "{{ region }}"
-            tags: 
-              app: "{{ app }}"
-              function: app1
-            user_data: "{{ lookup('template', 'userdata.txt.j2') }}"
-            wait: yes
-          register: app1_ec2 
+        # - name: Provision Windows Server Instance App 1
+        #   community.aws.ec2_instance:
+        #     state: present
+        #     aws_access_key: "{{ lookup('env', 'AWS_ACCESS_KEY_ID') }}"
+        #     aws_secret_key: "{{ lookup('env', 'AWS_SECRET_ACCESS_KEY') }}"
+        #     name: "app1-{{ id }}"
+        #     security_groups: 
+        #       - "{{ internal_sg.group_id }}"
+        #     vpc_subnet_id: "{{ demo_subnet.subnet.id }}"
+        #     image_id: "{{ aws_ami }}"
+        #     instance_type: "{{ aws_instance_type }}"
+        #     region: "{{ region }}"
+        #     tags: 
+        #       app: "{{ app }}"
+        #       function: app1
+        #     user_data: "{{ lookup('template', 'userdata.txt.j2') }}"
+        #     wait: yes
+        #   register: app1_ec2 
 
-        - name: Provision Windows Server Instance App 2
-          community.aws.ec2_instance:
-            state: present
-            aws_access_key: "{{ lookup('env', 'AWS_ACCESS_KEY_ID') }}"
-            aws_secret_key: "{{ lookup('env', 'AWS_SECRET_ACCESS_KEY') }}"
-            name: "app2-{{ id }}"
-            security_groups: 
-              - "{{ internal_sg.group_id }}"
-            vpc_subnet_id: "{{ demo_subnet.subnet.id }}"
-            image_id: "{{ aws_ami }}"
-            instance_type: "{{ aws_instance_type }}"
-            region: "{{ region }}"
-            tags: 
-              app: "{{ app }}"
-              function: app2
-            user_data: "{{ lookup('template', 'userdata.txt.j2') }}"
-            wait: yes
-          register: app2_ec2 
+        # - name: Provision Windows Server Instance App 2
+        #   community.aws.ec2_instance:
+        #     state: present
+        #     aws_access_key: "{{ lookup('env', 'AWS_ACCESS_KEY_ID') }}"
+        #     aws_secret_key: "{{ lookup('env', 'AWS_SECRET_ACCESS_KEY') }}"
+        #     name: "app2-{{ id }}"
+        #     security_groups: 
+        #       - "{{ internal_sg.group_id }}"
+        #     vpc_subnet_id: "{{ demo_subnet.subnet.id }}"
+        #     image_id: "{{ aws_ami }}"
+        #     instance_type: "{{ aws_instance_type }}"
+        #     region: "{{ region }}"
+        #     tags: 
+        #       app: "{{ app }}"
+        #       function: app2
+        #     user_data: "{{ lookup('template', 'userdata.txt.j2') }}"
+        #     wait: yes
+        #   register: app2_ec2 
 
         - name: Update AWS Inventory
           awx.awx.tower_inventory_source_update:
