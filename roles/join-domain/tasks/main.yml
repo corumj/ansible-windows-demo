@@ -28,7 +28,7 @@
     dns_domain_name: "{{ domain_name }}"
     domain_admin_user: "admin@{{ domain_name }}"
     domain_admin_password: "{{ win_initial_password }}"
-    domain_ou_path: "DC=demo,DC=lab"
+    domain_ou_path: "OU=Servers,OU=Ansible,DC=demo,DC=lab"
     state: domain
   register: domain_state
 
