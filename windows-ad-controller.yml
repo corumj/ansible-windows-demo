@@ -1,4 +1,13 @@
-- name: Create Domain Controller and Domain
-  hosts: tag_function_ad_server
+- name: Provision EC2 Instance for DC
+  hosts: localhost 
+  connection: local 
+  vars: 
+    function: ad_server
+    ec2_instance_name: ActiveDirectory
   roles:
-  - windows-ad-controller
+    - aws-provision 
+
+- name: Create Domain Controller and Domain
+  hosts: "{{ function }}"
+  roles:
+    - windows-ad-controller

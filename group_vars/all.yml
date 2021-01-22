@@ -5,13 +5,13 @@ name: jerry
 # This will soon randomly generate a password for the windows servers (when I figure it out)
 win_initial_password: RedHat!1 # "{{ lookup('password','/dev/null length=15') }}"
 
-# static, please don't change these unless you want a challenge
-region: us-east-1 
-app: ansible_windows_demo_{{ name }}
-aws_key_name: windows-demo-key-{{ name }}
-aws_ami: ami-0229f7666f517b31e
-aws_instance_type: t2.medium  # sort of works with micro but times out when you try ANYTHING 
+# static, please don't change below unless you want a challenge
+ 
+app: ansible-demo-{{ name }}
+aws_key_name: ansible-demo-key-{{ name }}
+id: "ansible-{{ name }}"
 
+# for setting up domain controller
 upstream_dns_1: 8.8.8.8
 upstream_dns_2: 8.8.4.4
 dc_hostname: 'dc01'
@@ -20,17 +20,3 @@ domain_name: "demo.lab"
 recovery_password: 'P@ssw0rd'
 reverse_dns_zone: "10.0.0.0/16"
 reverse_dns_zone_name: "0.10.in-addr.arpa"
-
-
-
-
-# temp_address: 172.16.108.144
-# dc_address: 172.16.108.11
-# dc_netmask_cidr: 24
-# dc_gateway: 172.16.108.2
-
-# local_admin: '.\administrator'
-# temp_password: 'Changeme!'
-# dc_password: 'P@ssw0rd'
-
-

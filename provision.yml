@@ -4,7 +4,7 @@
   connection: local
   gather_facts: false
   vars:
-    id: "windows-demo-app-{{ name }}"
+    id: "ansible-{{ name }}"
   tasks:
     - name: Get Instance facts 
       block:
@@ -281,7 +281,7 @@
         - name: Remove the VPC 
           amazon.aws.ec2_vpc_net:
             name: "{{ id }}-vpc"
-            cidr_block: 10.10.0.0/16
+            cidr_block: 10.0.0.0/16
             region: "{{ region }}"
             tenancy: default
             aws_access_key: "{{ lookup('env', 'AWS_ACCESS_KEY_ID') }}"

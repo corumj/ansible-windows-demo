@@ -100,67 +100,67 @@
         
     - name: Create provisioning template
       awx.awx.tower_job_template:
-        name: "Provision EC2 Instance"
+        name: "Provision Windows AD Domain Server"
         job_type: "run"
         inventory: "AWS"
         project: "Windows Ops"
-        playbook: "provision.yml"
+        playbook: "windows-ad-controller.yml"
         credentials: 
           - "AWS Console"
           - "Tower Credential"
-        job_tags: "provision"
+          - "AWS Windows Machine"
         state: "present"
         tower_username: "{{ tower_username }}"
         tower_password: "{{ tower_password }}"
         tower_host: https://localhost
         tower_verify_ssl: false
 
-    - name: Create deprovisioning template
-      awx.awx.tower_job_template:
-        name: "Deprovision EC2 Instance"
-        job_type: "run"
-        inventory: "AWS"
-        project: "Windows Ops"
-        playbook: "provision.yml"
-        credentials: 
-          - "AWS Console"
-        job_tags: "deprovision"
-        state: "present"
-        tower_username: "{{ tower_username }}"
-        tower_password: "{{ tower_password }}"
-        tower_host: https://localhost
-        tower_verify_ssl: false
+#     - name: Create deprovisioning template
+#       awx.awx.tower_job_template:
+#         name: "Deprovision EC2 Instance"
+#         job_type: "run"
+#         inventory: "AWS"
+#         project: "Windows Ops"
+#         playbook: "provision.yml"
+#         credentials: 
+#           - "AWS Console"
+#         job_tags: "deprovision"
+#         state: "present"
+#         tower_username: "{{ tower_username }}"
+#         tower_password: "{{ tower_password }}"
+#         tower_host: https://localhost
+#         tower_verify_ssl: false
 
-    - name: Create Windows Update job template
-      awx.awx.tower_job_template:
-        name: "Windows Updates"
-        job_type: run
-        inventory: AWS
-        project: "Windows Ops"
-        playbook: windows-updates.yml
-        credentials:
-          - "AWS Windows Machine"
-        limit: "tag_app_{{ app }}"
-        state: present
-        survey_enabled: yes
-        survey_spec: "{{ lookup('file', 'windows_update_survey.json') }}"
-        tower_username: "{{ tower_username }}"
-        tower_password: "{{ tower_password }}"
-        tower_host: https://localhost
-        tower_verify_ssl: false
+#     - name: Create Windows Update job template
+#       awx.awx.tower_job_template:
+#         name: "Windows Updates"
+#         job_type: run
+#         inventory: AWS
+#         project: "Windows Ops"
+#         playbook: windows-updates.yml
+#         credentials:
+#           - "AWS Windows Machine"
+#         limit: "tag_app_{{ app }}"
+#         state: present
+#         survey_enabled: yes
+#         survey_spec: "{{ lookup('file', 'windows_update_survey.json') }}"
+#         tower_username: "{{ tower_username }}"
+#         tower_password: "{{ tower_password }}"
+#         tower_host: https://localhost
+#         tower_verify_ssl: false
 
-    - name: Create Domain Controller job template
-      awx.awx.tower_job_template:
-        name: "Create Domain Controller"
-        job_type: run 
-        inventory: AWS   
-        project: Windows Ops  
-        playbook: windows-ad-controller.yml  
-        credentials:
-          - "AWS Windows Machine"
-        limit: tag_function_ad_server
-        state: present 
-        tower_username: "{{ tower_username }}"
-        tower_password: "{{ tower_password }}"
-        tower_host: https://localhost
-        tower_verify_ssl: false        
+#     - name: Create Domain Controller job template
+#       awx.awx.tower_job_template:
+#         name: "Create Domain Controller"
+#         job_type: run 
+#         inventory: AWS   
+#         project: Windows Ops  
+#         playbook: windows-ad-controller.yml  
+#         credentials:
+#           - "AWS Windows Machine"
+#         limit: tag_function_ad_server
+#         state: present 
+#         tower_username: "{{ tower_username }}"
+#         tower_password: "{{ tower_password }}"
+#         tower_host: https://localhost
+#         tower_verify_ssl: false        

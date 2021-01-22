@@ -1,0 +1,65 @@
+- name: Retrieve required AWS infrastructure ID's 
+  block:
+    - amazon.aws.ec2_vpc_subnet_info:
+        region: "{{ region }}"
+        aws_access_key: "{{ lookup('env', 'AWS_ACCESS_KEY_ID') }}"
+        aws_secret_key: "{{ lookup('env', 'AWS_SECRET_ACCESS_KEY') }}"
+        filters:
+          "tag:Name": "{{ id }}-subnet"
+      register: vpc_subnet_info
+
+    - name: Retrieve Security Group info 
+      amazon.aws.ec2_group_info:
+        region: "{{ region }}"
+        aws_access_key: "{{ lookup('env', 'AWS_ACCESS_KEY_ID') }}"
+        aws_secret_key: "{{ lookup('env', 'AWS_SECRET_ACCESS_KEY') }}"
+        filters:
+          "tag:Name": "{{ id }}-sec-group"
+      register: sec_info
+
+- name: Provision
+  block:
+    - name: Provision ec2 instance 
+      community.aws.ec2_instance:
+        state: present
+        aws_access_key: "{{ lookup('env', 'AWS_ACCESS_KEY_ID') }}"
+        aws_secret_key: "{{ lookup('env', 'AWS_SECRET_ACCESS_KEY') }}"
+        name: "{{ ec2_instance_name }}"
+        security_group: "{{ sec_info.group_name }}"
+        vpc_subnet_id: "{{ vpc_subnet_info.subnet.id }}"
+        image_id: "{{ aws_ami }}"
+        instance_type: "{{ aws_instance_type }}"
+        region: "{{ region }}"
+        tags: 
+          app: "{{ app }}"
+          function: "{{ function }}"
+        user_data: "{{ lookup('template', 'userdata.txt.j2') }}"
+        wait: yes
+      register: ec2 
+
+    - name: Update AWS Inventory
+      awx.awx.tower_inventory_source_update:
+        name: AWS  
+        inventory: AWS
+        wait: True
+        tower_verify_ssl: false
+
+    - name: Update Tower groups with the new host
+      awx.awx.tower_group: 
+        name: "{{ item }}" 
+        inventory: AWS  
+        hosts:
+          - "{{ ec2.instances[0].public_ip_address }}"        
+        state: present 
+        tower_verify_ssl: false
+      loop:
+        - windows 
+        - "{{ function }}"
+
+    - name: Wait for WinRM to answer on all hosts 
+      wait_for:
+        port: 5986
+        host: "{{ item }}"
+        timeout: 300 
+      loop:
+        - "{{ ec2.instances[0].public_ip_address }}"
