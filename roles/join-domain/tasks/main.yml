@@ -1,7 +1,7 @@
 ---
 - name: print hostvars 
   debug:
-    var: "{{ hostvars[0] }}"
+    var: "{{ hostvars[groups['tag_function_ad_server'][0]]['ansible_eth0']['ipv4']['address']  }}"
     
 # - name: configure DNS Client 
 #   ansible.windows.win_dns_client:
