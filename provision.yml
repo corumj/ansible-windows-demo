@@ -190,14 +190,14 @@
             wait: True
             tower_verify_ssl: false
 
-        - name: Update the Windows group with the new hosts
+        - name: Update the Windows group with the new host
           awx.awx.tower_group: 
             name: windows 
             inventory: AWS  
             hosts:
               - "{{ ad_ec2.instances[0].public_ip_address }}"
-              - "{{ app1_ec2.instances[0].public_ip_address }}"
-              - "{{ app2_ec2.instances[0].public_ip_address }}"            
+              # - "{{ app1_ec2.instances[0].public_ip_address }}"
+              # - "{{ app2_ec2.instances[0].public_ip_address }}"            
             state: present 
             tower_verify_ssl: false
 
@@ -208,8 +208,8 @@
             timeout: 300 
           loop:
             - "{{ ad_ec2.instances[0].public_ip_address }}"
-            - "{{ app1_ec2.instances[0].public_ip_address }}"
-            - "{{ app2_ec2.instances[0].public_ip_address }}"
+            # - "{{ app1_ec2.instances[0].public_ip_address }}"
+            # - "{{ app2_ec2.instances[0].public_ip_address }}"
           
       tags: ['never', 'provision']
 
