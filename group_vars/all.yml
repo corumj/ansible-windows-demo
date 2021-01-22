@@ -24,13 +24,13 @@ reverse_dns_zone: "10.0.0.0/16"
 
 
 
-temp_address: 172.16.108.144
-dc_address: 172.16.108.11
-dc_netmask_cidr: 24
-dc_gateway: 172.16.108.2
+# temp_address: 172.16.108.144
+# dc_address: 172.16.108.11
+# dc_netmask_cidr: 24
+# dc_gateway: 172.16.108.2
 
-local_admin: '.\administrator'
-temp_password: 'Changeme!'
-dc_password: 'P@ssw0rd'
+# local_admin: '.\administrator'
+# temp_password: 'Changeme!'
+# dc_password: 'P@ssw0rd'
 
 
