@@ -257,7 +257,7 @@
           community.aws.ec2_vpc_route_table:
             vpc_id: "{{ vpc_info.vpcs[0].vpc_id }}"
             region: "{{ region }}"
-            route_table_id: "{{ vpc_route_info.id }}"
+            route_table_id: "{{ vpc_route_info.route_tables[0].id }}"
             aws_access_key: "{{ lookup('env', 'AWS_ACCESS_KEY_ID') }}"
             aws_secret_key: "{{ lookup('env', 'AWS_SECRET_ACCESS_KEY') }}"
             state: absent 
