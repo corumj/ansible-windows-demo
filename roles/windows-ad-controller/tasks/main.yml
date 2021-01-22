@@ -118,3 +118,18 @@
     email: "{{ item }}@{{ domain_name }}"
   with_items:
     - "{{ users }}"
+
+# This section will create our OU and uses DSC
+- name: Install nuget (required for AD Powershell DSC modules)
+  win_shell: install-packageprovider -name nuget -force
+
+- name: Install xActiveDirectory PS Module 
+  win_psmodule:
+    name: ActiveDirectoryDSC
+    state: present 
+
+- name: Create our OU 
+  win_dsc:
+    resource_name: ADOrganizationalUnit
+    name: "Servers"
+    path: "DC=demo,DC=lab"
