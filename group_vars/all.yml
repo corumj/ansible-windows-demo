@@ -19,7 +19,7 @@ ntp_servers: "0.us.pool.ntp.org,1.us.pool.ntp.org"
 domain_name: "demo.lab"
 recovery_password: 'P@ssw0rd'
 reverse_dns_zone: "10.0.0.0/16"
-
+reverse_dns_zone_name: "0.10.in-addr.arpa"
 
 
 
