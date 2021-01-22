@@ -244,6 +244,7 @@
 
         - name: retrieve vpc route table id 
           community.aws.ec2_vpc_route_table_info:
+            region: "{{ region }}"
             filters:
               "tag:Name": "{{ id }}-vpc-rtbl"
           register: vpc_route_info
