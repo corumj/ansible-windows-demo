@@ -132,8 +132,14 @@
     name: ActiveDirectoryDSC
     state: present 
 
-- name: Create our OU 
+- name: Create a Server OU 
   win_dsc:
     resource_name: ADOrganizationalUnit
     name: "Servers"
     path: "DC=demo,DC=lab"
+
+- name: Create an Ansible OU 
+  win_dsc:
+    resource_name: ADOrganizationalUnit
+    name: "Ansible"
+    path: "OU=Servers,DC=demo,DC=lab"
