@@ -22,7 +22,7 @@
 
 # Only needed during install because of the restart, can enable later
 - name: Disable firewall for domain, public and private profiles 
-  ansible.windows.win_firewall:
+  win_firewall:
     state: disabled 
     profiles:
       - Domain 
