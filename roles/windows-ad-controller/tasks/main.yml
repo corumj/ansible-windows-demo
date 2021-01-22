@@ -79,26 +79,26 @@
   until: dnszone is succeeded 
 
 - name: Add windows groups
-  ansible.windows.win_domain_group:
+  win_domain_group:
     name: Ansible Users 
     scope: global 
 
 - name: Add Windows domain admin 
-  ansible.windows.win_domain_user:
-  name: "Admin"
-  upn: "Admin@{{ domain_name }}"
-  state: present 
-  enabled: yes 
-  account_locked: no 
-  groups:
-    - Domain Admins 
-  password: "{{ win_initial_password }}"
-  update_password: on_create 
-  password_expired: false 
-  firstname: admin 
-  surname: user 
-  company: Red Hat 
-  email: "Admin@{{ domain_name }}"
+  win_domain_user:
+    name: "Admin"
+    upn: "Admin@{{ domain_name }}"
+    state: present 
+    enabled: yes 
+    account_locked: no 
+    groups:
+      - Domain Admins 
+    password: "{{ win_initial_password }}"
+    update_password: on_create 
+    password_expired: false 
+    firstname: admin 
+    surname: user 
+    company: Red Hat 
+    email: "Admin@{{ domain_name }}"
 
 - name: Add windows AD users 
   win_domain_user:
@@ -114,7 +114,7 @@
     password_expired: false
     firstname: user
     surname: user
-    company: AnsibleByRedHat
-    email: "{{ item }}@{{ dns_domain_name }}"
+    company: Red Hat
+    email: "{{ item }}@{{ domain_name }}"
   with_items:
     - "{{ users }}"
