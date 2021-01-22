@@ -8,6 +8,6 @@
     - aws-provision 
 
 - name: Create Domain Controller and Domain
-  hosts: "{{ function }}"
+  hosts: ad_server
   roles:
     - windows-ad-controller
