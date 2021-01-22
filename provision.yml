@@ -250,8 +250,8 @@
           register: vpc_route_info
 
         - name: debug 
-            debug:
-              var: vpc_route_info
+          debug:
+            var: vpc_route_info
 
         - name: Remove subnet route table 
           community.aws.ec2_vpc_route_table:
