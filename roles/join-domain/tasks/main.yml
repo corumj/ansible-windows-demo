@@ -25,7 +25,7 @@
 
 - name: Add Windows Server to the Domain
   ansible.windows.win_domain_membership:
-    dns_domain_name: "{{ hostvars[groups['tag_function_ad_server'][0]]['ec2_private_ip_address'] }}" # "{{ domain_name }}"
+    dns_domain_name: "{{ domain_name }}"
     domain_admin_user: "Admin@{{ domain_name }}"
     domain_admin_password: "{{ win_initial_password }}"
     domain_ou_path: "OU=Windows,OU=Servers,DC=ansible"
