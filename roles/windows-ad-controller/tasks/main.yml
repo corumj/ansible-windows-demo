@@ -70,12 +70,16 @@
 
 # Lots of retries on this next one - it does take a while for DS
 # to finish spooling up and this cannot complete until then
+- name: Get current DNS zones 
+  win_shell: Get-DnsServerZone | Select ZoneName
+  register: dnsserverzone 
 
 - name: Create reverse DNS zone 
   win_shell: "Add-DnsServerPrimaryZone -NetworkID {{ reverse_dns_zone }} -ReplicationScope Forest"
   retries: 30
   delay: 60 
   register: dnszone 
+  when: "reverse_dns_zone_name not in dnsserverzone.stdout"
   until: dnszone is succeeded 
 
 - name: Add windows groups
@@ -120,7 +124,7 @@
     - "{{ users }}"
 
 # This section will create our OU and uses DSC
-- name: Install nuget (required for AD Powershell DSC modules)
+- name: Install latest nuget (required for DSC Resource Kit)
   win_shell: install-packageprovider -name nuget -force
 
 - name: Install xActiveDirectory PS Module 
