@@ -9,6 +9,12 @@
     - aws-setup
     - aws-provision 
 
+- name: Refresh inventory 
+  hosts: localhost 
+  connection: local 
+  tasks:
+    - meta: refresh_inventory
+    
 - name: Create Domain Controller and Domain
   hosts: ad_server
   gather_facts: false
