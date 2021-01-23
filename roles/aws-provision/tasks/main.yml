@@ -25,7 +25,7 @@
         aws_access_key: "{{ lookup('env', 'AWS_ACCESS_KEY_ID') }}"
         aws_secret_key: "{{ lookup('env', 'AWS_SECRET_ACCESS_KEY') }}"
         name: "{{ ec2_instance_name }}"
-        security_group: "{{ sec_info.group_name }}"
+        security_group: "{{ sec_info.security_groups[0].group_name }}"
         vpc_subnet_id: "{{ vpc_subnet_info.subnet.id }}"
         image_id: "{{ aws_ami }}"
         instance_type: "{{ aws_instance_type }}"
