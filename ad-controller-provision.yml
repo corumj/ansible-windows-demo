@@ -1,0 +1,11 @@
+---
+- name: Provision EC2 Instance for DC
+  hosts: localhost 
+  connection: local 
+  gather_facts: false
+  vars: 
+    function: ad_server
+    ec2_instance_name: ActiveDirectory
+  roles:
+    - aws-setup
+    - aws-provision 
