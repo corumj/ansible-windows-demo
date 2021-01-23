@@ -1,6 +1,7 @@
 - name: Provision EC2 Instance for DC
   hosts: localhost 
   connection: local 
+  gather_facts: false
   vars: 
     function: ad_server
     ec2_instance_name: ActiveDirectory
@@ -9,5 +10,6 @@
 
 - name: Create Domain Controller and Domain
   hosts: ad_server
+  gather_facts: false
   roles:
     - windows-ad-controller
