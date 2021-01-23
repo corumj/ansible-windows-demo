@@ -1,0 +1,7 @@
+---
+- name: Begin Deprovisioning
+  hosts: localhost
+  connection: local
+  gather_facts: false
+  roles:
+    - aws-deprovision 
