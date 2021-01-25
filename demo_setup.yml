@@ -191,7 +191,7 @@
         inventory: "AWS"
         project: "Windows Ops"
         playbook: "deprovision.yml"
-        job_tags: "['']"
+        job_tags: "''"
         credentials: 
           - "AWS Console"
         state: "present"
@@ -207,7 +207,7 @@
         inventory: "AWS"
         project: "Windows Ops"
         playbook: "deprovision.yml"
-        job_tags: "['all']"
+        job_tags: "'all'"
         credentials: 
           - "AWS Console"
         state: "present"
