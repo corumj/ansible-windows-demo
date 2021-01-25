@@ -52,15 +52,6 @@
 
 - name: Remove AWS Infrastructure 
   block:
-    - name: Remove subnet route table 
-      community.aws.ec2_vpc_route_table:
-        vpc_id: "{{ vpc_info.vpcs[0].vpc_id }}"
-        region: "{{ region }}"
-        route_table_id: "{{ vpc_route_info.route_tables[0].id }}"
-        aws_access_key: "{{ lookup('env', 'AWS_ACCESS_KEY_ID') }}"
-        aws_secret_key: "{{ lookup('env', 'AWS_SECRET_ACCESS_KEY') }}"
-        state: absent 
-
     - name: Delete the subnet on the VPC  
       amazon.aws.ec2_vpc_subnet:
         vpc_id: "{{ vpc_info.vpcs[0].vpc_id }}"
@@ -71,6 +62,16 @@
         state: absent 
       when: vpc_info.vpcs
 
+    - name: Remove subnet route table 
+      community.aws.ec2_vpc_route_table:
+        vpc_id: "{{ vpc_info.vpcs[0].vpc_id }}"
+        region: "{{ region }}"
+        lookup: id
+        route_table_id: "{{ vpc_route_info.route_tables[0].id }}"
+        aws_access_key: "{{ lookup('env', 'AWS_ACCESS_KEY_ID') }}"
+        aws_secret_key: "{{ lookup('env', 'AWS_SECRET_ACCESS_KEY') }}"
+        state: absent 
+        
     - name: remove Internet Gateway for VPC  
       community.aws.ec2_vpc_igw:
         vpc_id: "{{ vpc_info.vpcs[0].vpc_id }}"
