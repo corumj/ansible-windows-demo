@@ -216,6 +216,22 @@
         tower_host: https://localhost
         tower_verify_ssl: false
 
+    - name: Create Windows GPO hardening template
+      awx.awx.tower_job_template:
+        name: "Windows GPO Hardening"
+        job_type: "run"
+        inventory: "AWS"
+        project: "Windows Ops"
+        playbook: "windows-hardening.yml"
+        job_tags: "all"
+        credentials: 
+          - "AWS Windows Machine"
+        state: "present"
+        tower_username: "{{ tower_username }}"
+        tower_password: "{{ tower_password }}"
+        tower_host: https://localhost
+        tower_verify_ssl: false
+
 #     - name: Create Windows Update job template
 #       awx.awx.tower_job_template:
 #         name: "Windows Updates"
