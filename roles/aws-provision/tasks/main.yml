@@ -24,7 +24,7 @@
         state: present
         aws_access_key: "{{ lookup('env', 'AWS_ACCESS_KEY_ID') }}"
         aws_secret_key: "{{ lookup('env', 'AWS_SECRET_ACCESS_KEY') }}"
-        name: "{{ ec2_instance_name }}"
+        name: "ansible-{{ ec2_instance_name }}-{{ name }}"
         security_group: "{{ sec_info.security_groups[0].group_name }}"
         vpc_subnet_id: "{{ vpc_subnet_info.subnets[0].subnet_id }}"
         image_id: "{{ aws_ami }}"

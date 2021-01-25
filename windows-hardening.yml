@@ -2,22 +2,6 @@
 - name: Simple hardening of GPO with Ansible 
   hosts: ad_server 
   tasks:
-    - name: Install latest nuget (required for DSC Resource Kit)
-      win_shell: install-packageprovider -name nuget -force
-
-    - name: Install GroupPolicyDSC PS Module 
-      win_psmodule:
-        name: GroupPolicyDSC
-        state: present 
-
-    - name: Create GPO to disable telnet-client 
-      win_dsc:
-        resource_name: GroupPolicy
-        name: "AxInstSV"
-        ensure: "Absent"
-
-    - name: Create GPO to disable SMB1 
-      win_dsc:
-        resource_name: GroupPolicy
-        name: "tzautoupdate"
-        ensure: "Absent"
+    - name: Find some hardening stuff for this 
+      debug:
+        msg: "Placeholder"
