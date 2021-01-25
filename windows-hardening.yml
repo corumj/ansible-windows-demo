@@ -12,12 +12,12 @@
 
     - name: Create GPO to disable telnet-client 
       win_dsc:
-        resource_name: GroupPolicyDSC
+        resource_name: GroupPolicy
         name: "Telnet-Client"
         ensure: "Absent"
 
     - name: Create GPO to disable SMB1 
       win_dsc:
-        resource_name: GroupPolicyDSC
+        resource_name: GroupPolicy
         name: "FS-SMB1"
         ensure: "Absent"
