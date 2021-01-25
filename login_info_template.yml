@@ -3,4 +3,4 @@ tower_username: "admin"
 tower_password: "ansible"
 AWS_ACCESS_KEY_ID: somethingsecret
 AWS_SECRET_ACCESS_KEY: something even more secret
-AWS_SECURITY_TOKEN: only needed if keys are generated with SAML
+AWS_SECURITY_TOKEN: AWS Security or session token (they're the same)
