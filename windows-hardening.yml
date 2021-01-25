@@ -13,11 +13,11 @@
     - name: Create GPO to disable telnet-client 
       win_dsc:
         resource_name: GroupPolicy
-        name: "Telnet-Client"
+        name: "AxInstSV"
         ensure: "Absent"
 
     - name: Create GPO to disable SMB1 
       win_dsc:
         resource_name: GroupPolicy
-        name: "FS-SMB1"
+        name: "tzautoupdate"
         ensure: "Absent"
