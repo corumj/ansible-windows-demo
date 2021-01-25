@@ -184,13 +184,32 @@
           tower_host: https://localhost
           tower_verify_ssl: false
 
-    - name: Create deprovisioning template
+    - name: Create deprovision ec2 instances template
       awx.awx.tower_job_template:
-        name: "Deprovision All AWS Resources for Demo"
+        name: "Deprovision All EC2 Instances for Demo"
         job_type: "run"
         inventory: "AWS"
         project: "Windows Ops"
         playbook: "deprovision.yml"
+        job_tags:
+          - ""
+        credentials: 
+          - "AWS Console"
+        state: "present"
+        tower_username: "{{ tower_username }}"
+        tower_password: "{{ tower_password }}"
+        tower_host: https://localhost
+        tower_verify_ssl: false
+
+    - name: Create deprovision all AWS Resources template
+      awx.awx.tower_job_template:
+        name: "Deprovision All EC2 Instances for Demo"
+        job_type: "run"
+        inventory: "AWS"
+        project: "Windows Ops"
+        playbook: "deprovision.yml"
+        job_tags:
+          - "all"
         credentials: 
           - "AWS Console"
         state: "present"

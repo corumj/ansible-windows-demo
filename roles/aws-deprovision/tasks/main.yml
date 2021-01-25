@@ -33,8 +33,11 @@
         filters:
           "tag:Name": "{{ id }}-sec-group"
       register: sec_info
+  tags: 
+    - never 
+    - all 
 
-- name: Remove Ec2 Demo Resources
+- name: Remove Ec2 Instances
   block:
     - name: Remove EC2 Instances
       community.aws.ec2_instance:
@@ -44,7 +47,11 @@
         aws_secret_key: "{{ lookup('env', 'AWS_SECRET_ACCESS_KEY') }}"
         filters:
           "tag:app": "{{ app }}"
+  tags:
+    - always 
 
+- name: Remove AWS Infrastructure 
+  block:
     - name: Remove subnet route table 
       community.aws.ec2_vpc_route_table:
         vpc_id: "{{ vpc_info.vpcs[0].vpc_id }}"
@@ -87,3 +94,6 @@
         aws_access_key: "{{ lookup('env', 'AWS_ACCESS_KEY_ID') }}"
         aws_secret_key: "{{ lookup('env', 'AWS_SECRET_ACCESS_KEY') }}"
         state: absent
+  tags:
+    - never 
+    - all 
