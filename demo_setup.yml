@@ -203,7 +203,7 @@
 
     - name: Create deprovision all AWS Resources template
       awx.awx.tower_job_template:
-        name: "Deprovision All EC2 Instances for Demo"
+        name: "Deprovision All AWS Resources for Demo"
         job_type: "run"
         inventory: "AWS"
         project: "Windows Ops"
