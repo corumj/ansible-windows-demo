@@ -1,0 +1,29 @@
+{
+  "name": "",
+  "description": "",
+  "spec": [
+      {
+          "question_name": "Pick an application group for your server",
+          "question_description": "",
+          "required": true,
+          "type": "multiplechoice",
+          "variable": "serverFunction",
+          "min": null,
+          "max": null,
+          "default": "web",
+          "choices": "db\nweb\napi"
+      },
+      {
+          "question_name": "Please enter a name for your EC2 instance",
+          "question_description": "Name of EC2 Instance (will be appended with unique code)",
+          "required": true,
+          "type": "text",
+          "variable": "instance_name",
+          "min": 0,
+          "max": 10,
+          "default": "",
+          "choices": "",
+          "new_question": true
+      }
+  ]
+}

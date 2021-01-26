@@ -1,3 +1,13 @@
+- name: Check if instance already exists
+  community.aws.ec2_instance_info:
+    filters:
+      "tag:Name": "ansible-{{ ec2_instance_name }}-{{ name }}"
+  register: existing
+
+  - name: Debug this to see what it's like empty 
+    debug: 
+      var: existing 
+      
 - name: Retrieve required AWS infrastructure ID's 
   block:
     - amazon.aws.ec2_vpc_subnet_info:
@@ -32,7 +42,7 @@
         region: "{{ region }}"
         tags: 
           app: "{{ app }}"
-          function: "{{ function }}"
+          function: "{{ function }}-{{ name }}"
         user_data: "{{ lookup('template', 'userdata.txt.j2') }}"
         wait: yes
       register: ec2 
@@ -54,7 +64,7 @@
         tower_verify_ssl: false
       loop:
         - windows 
-        - "{{ function }}"
+        - "{{ function }}-{{ name }}"
 
     - name: Wait for WinRM to answer on all hosts 
       wait_for:
