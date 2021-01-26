@@ -21,7 +21,7 @@
         src: deprovision.json.j2
         dest: "{{ playbook_dir }}/files/deprovision.json"
 
-    - name: Create deprovision single EC2 Instance
+    - name: Update deprovision single EC2 Instance
       awx.awx.tower_job_template:
         name: "Deprovision Specific EC2 Instance"
         job_type: "run"
@@ -34,7 +34,7 @@
         survey_enabled: yes 
         survey_spec: "{{ playbook_dir }}/files/deprovision.json"
         state: "present"
-        tower_username: "{{ lookup("env", "TOWER_USERNAME") }}"
-        tower_password: "{{ lookup("env", "TOWER_PASSWORD") }}"
+        tower_username: "{{ lookup('env', 'TOWER_USERNAME') }}"
+        tower_password: "{{ lookup('env', 'TOWER_PASSWORD') }}"
         tower_host: https://localhost
         tower_verify_ssl: false

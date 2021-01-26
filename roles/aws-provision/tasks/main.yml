@@ -56,8 +56,8 @@
         name: AWS  
         inventory: AWS
         wait: True
-        tower_username: "{{ lookup("env", "TOWER_USERNAME") }}"
-        tower_password: "{{ lookup("env", "TOWER_PASSWORD") }}"
+        tower_username: "{{ lookup('env', 'TOWER_USERNAME') }}"
+        tower_password: "{{ lookup('env', 'TOWER_PASSWORD') }}"
         tower_host: https://localhost
         tower_verify_ssl: false
 
@@ -68,8 +68,8 @@
         hosts:
           - "{{ ec2.instances[0].public_ip_address }}"        
         state: present 
-        tower_username: "{{ lookup("env", "TOWER_USERNAME") }}"
-        tower_password: "{{ lookup("env", "TOWER_PASSWORD") }}"
+        tower_username: "{{ lookup('env', 'TOWER_USERNAME') }}"
+        tower_password: "{{ lookup('env', 'TOWER_PASSWORD') }}"
         tower_host: https://localhost
         tower_verify_ssl: false
       loop:
