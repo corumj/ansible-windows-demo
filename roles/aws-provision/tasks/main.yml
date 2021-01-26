@@ -4,10 +4,10 @@
       "tag:Name": "ansible-{{ ec2_instance_name }}-{{ name }}"
   register: existing
 
-  - name: Debug this to see what it's like empty 
-    debug: 
-      var: existing 
-      
+- name: Debug this to see what it's like empty 
+  debug: 
+    var: existing 
+
 - name: Retrieve required AWS infrastructure ID's 
   block:
     - amazon.aws.ec2_vpc_subnet_info:
