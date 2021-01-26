@@ -1,5 +1,5 @@
 --- 
-- name: Setup Demo Environment
+- name: Update deprovisioning list
   hosts: localhost
   connection: local
   tasks:
@@ -10,6 +10,7 @@
         aws_secret_key: "{{ lookup('env', 'AWS_SECRET_ACCESS_KEY') }}"
         filters:
           "tag:app": "{{ app }}"
+          instance-state-name: ["pending", "running"]
       register: ec2_instances 
 
     - name: Print 
