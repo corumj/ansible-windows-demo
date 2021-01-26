@@ -1,0 +1,40 @@
+--- 
+- name: Setup Demo Environment
+  hosts: localhost
+  connection: local
+  tasks:
+    - name: gather list of servers available for deprovisioning 
+      community.aws.ec2_instance_info:
+        region: "{{ region }}"
+        aws_access_key: "{{ lookup('env', 'AWS_ACCESS_KEY_ID') }}"
+        aws_secret_key: "{{ lookup('env', 'AWS_SECRET_ACCESS_KEY') }}"
+        filters:
+          "tag:app": "{{ app }}"
+      register: ec2_instances 
+
+    - name: Print 
+      debug:
+        var: ec2_instances
+
+    - name: Create survey spec file 
+      template:
+        src: deprovision.json.j2
+        dest: "{{ playbook_dir }}/files/deprovision.json"
+
+    - name: Create deprovision single EC2 Instance
+      awx.awx.tower_job_template:
+        name: "Deprovision Specific EC2 Instance"
+        job_type: "run"
+        inventory: "AWS"
+        project: "Windows Ops"
+        playbook: "deprovision.yml"
+        job_tags: "single"
+        credentials: 
+          - "AWS Console"
+        survey_enabled: yes 
+        survey_spec: "{{ playbook_dir }}/files/deprovision.json"
+        state: "present"
+        tower_username: "{{ lookup("env", "TOWER_USERNAME") }}"
+        tower_password: "{{ lookup("env", "TOWER_PASSWORD") }}"
+        tower_host: https://localhost
+        tower_verify_ssl: false

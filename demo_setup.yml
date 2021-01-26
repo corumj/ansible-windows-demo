@@ -191,7 +191,7 @@
         inventory: "AWS"
         project: "Windows Ops"
         playbook: "deprovision.yml"
-        job_tags: "''"
+        job_tags: "all_ec2"
         credentials: 
           - "AWS Console"
         state: "present"
@@ -216,16 +216,18 @@
         tower_host: https://localhost
         tower_verify_ssl: false
 
-    - name: Create Windows GPO hardening template
+    - name: Create deprovision single EC2 Instance
       awx.awx.tower_job_template:
-        name: "Windows GPO Hardening"
+        name: "Deprovision Specific EC2 Instance"
         job_type: "run"
         inventory: "AWS"
         project: "Windows Ops"
-        playbook: "windows-hardening.yml"
-        job_tags: "all"
+        playbook: "deprovision.yml"
+        job_tags: "single"
         credentials: 
-          - "AWS Windows Machine"
+          - "AWS Console"
+        survey_enabled: yes 
+        survey_spec: deprovision.json
         state: "present"
         tower_username: "{{ tower_username }}"
         tower_password: "{{ tower_password }}"
@@ -241,7 +243,48 @@
         playbook: "provision.yml"
         credentials: 
           - "AWS Console"
+        survey_enabled: yes 
+        survey_spec: provision-survey.json
         state: "present"
+        tower_username: "{{ tower_username }}"
+        tower_password: "{{ tower_password }}"
+        tower_host: https://localhost
+        tower_verify_ssl: false
+
+    - name: Create Join server to domain template
+      awx.awx.tower_job_template:
+        name: "Join Domain"
+        job_type: "run"
+        inventory: "AWS"
+        project: "Windows Ops"
+        playbook: "join-domain.yml"
+        credentials: 
+          - "AWS Windows Machine"
+        state: "present"
+        tower_username: "{{ tower_username }}"
+        tower_password: "{{ tower_password }}"
+        tower_host: https://localhost
+        tower_verify_ssl: false
+
+    - name: Create deprovision survey list update template 
+      awx.awx.tower_job_template:
+        name: "Update deprovision survey list"
+        job_type: "run"
+        inventory: "AWS"
+        project: "Windows Ops"
+        playbook: "update-deprovision-list.yml"
+        credentials: 
+          - "AWS Console"
+          - "Tower Credential"
+        state: "present"
+        tower_username: "{{ tower_username }}"
+        tower_password: "{{ tower_password }}"
+        tower_host: https://localhost
+        tower_verify_ssl: false
+
+    - name: Schedule update of survey host list 
+      awx.awx.tower_schedule:
+        name: "Update deprovision survey list"
         tower_username: "{{ tower_username }}"
         tower_password: "{{ tower_password }}"
         tower_host: https://localhost
