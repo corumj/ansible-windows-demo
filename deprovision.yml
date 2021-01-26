@@ -2,6 +2,8 @@
 - name: Begin Deprovisioning
   hosts: localhost
   connection: local
+  vars:
+    ec2_instance_name: "{{ instance_name }}"
   gather_facts: false
   roles:
     - aws-deprovision 
