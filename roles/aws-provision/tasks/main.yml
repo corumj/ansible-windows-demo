@@ -29,6 +29,7 @@
         filters:
           "tag:Name": "{{ id }}-sec-group"
       register: sec_info
+  when: not existing.instances
 
 - name: Provision
   block:
@@ -76,3 +77,4 @@
         timeout: 300 
       loop:
         - "{{ ec2.instances[0].public_ip_address }}"
+  when: not existing.instances 
