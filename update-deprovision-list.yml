@@ -58,7 +58,7 @@
         credentials: 
           - "AWS Console"
           - "Tower Credentials"
-          = "AWS Windows Machine"
+          - "AWS Windows Machine"
         survey_enabled: yes 
         survey_spec: | 
           {
