@@ -23,13 +23,13 @@
         dest: "{{ playbook_dir }}/deprovision.json"
 
     - name: Load JSON 
-        set_fact:
-          survey_spec_path: "{{ lookup('file', '{{ playbook_dir }}/deprovision.json') }}"
+      set_fact:
+        survey_spec_path: "{{ lookup('file', '{{ playbook_dir }}/deprovision.json') }}"
 
     - name: print it so we can see whats going on 
       debug:
         var: ansible_fact.survey_spec_path
-        
+
     - name: Update deprovision single EC2 Instance
       awx.awx.tower_job_template:
         name: "Deprovision Specific EC2 Instance"
