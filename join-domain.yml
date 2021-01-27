@@ -18,9 +18,10 @@
 
     - name: Add host to temporary group 
       awx.awx.tower_group:
-        name: "{{ ec2_instance.instances[0].public_ip_address }}"
-        ansible_host: "{{ ec2_instance.instances[0].public_ip_address }}"
-        group: temp_domain
+        name: temp_domain
+        inventory: "AWS"
+        hosts:
+          - "{{ ec2_instance.instances[0].public_ip_address }}"
         state: present 
         tower_username: "{{ lookup('env', 'TOWER_USERNAME') }}"
         tower_password: "{{ lookup('env', 'TOWER_PASSWORD') }}"
@@ -45,11 +46,10 @@
     - join-domain
 
   post_tasks:
-    - name: Remove temp group 
+    - name: Remove Temp Group 
       awx.awx.tower_group:
-        name: "{{ ec2_instance.instances[0].public_ip_address }}"
-        ansible_host: "{{ ec2_instance.instances[0].public_ip_address }}"
-        group: temp_domain
+        name: temp_domain
+        inventory: "AWS"
         state: absent 
         tower_username: "{{ lookup('env', 'TOWER_USERNAME') }}"
         tower_password: "{{ lookup('env', 'TOWER_PASSWORD') }}"
