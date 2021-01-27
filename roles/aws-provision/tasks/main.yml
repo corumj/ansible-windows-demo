@@ -70,6 +70,14 @@
         - windows 
         - "{{ function }}-{{ name }}"
 
+    - name: Update deprovision list 
+      awx.awx.tower_job_launch:
+        job_template: "Update deprovision survey list"
+        tower_username: "{{ lookup('env', 'TOWER_USERNAME') }}"
+        tower_password: "{{ lookup('env', 'TOWER_PASSWORD') }}"
+        tower_host: https://localhost
+        tower_verify_ssl: false
+
     - name: Wait for WinRM to answer on all hosts 
       wait_for:
         port: 5986
