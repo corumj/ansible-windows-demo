@@ -3,7 +3,8 @@
   hosts: localhost
   connection: local
   vars:
-    ec2_instances: {}
+    ec2_instances: 
+      instances: []
   tasks:
     - name: import login credentials for Tower
       include_vars: "{{lookup('first_found', login_info)}}"
