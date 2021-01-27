@@ -30,7 +30,6 @@
         filters:
           "tag:Name": "{{ id }}-sec-group"
       register: sec_info
-  when: not existing.instances
 
 - name: Provision
   block:
@@ -47,7 +46,7 @@
         region: "{{ region }}"
         tags: 
           app: "{{ app }}"
-          function: "{{ function }}-jerry"
+          function: "{{ function }}-{{ name }}"
         user_data: "{{ lookup('template', 'userdata.txt.j2') }}"
         wait: yes
       register: ec2 
