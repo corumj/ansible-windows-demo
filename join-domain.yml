@@ -13,7 +13,7 @@
       register: ec2_instance 
 
     - set_fact:
-        ec2: ec2_instance
+        ec2: "{{ ec2_instance }}"
 
 - name: debug 
   hosts: localhost 
