@@ -1,4 +1,13 @@
-- name: Join server to the domain
-  hosts: "{{ instance_name }}"
+- name: Retrieve AWS connection info for instance
+  hosts: all
+  tasks:
+    - name: Retrieve Instance Info
+      community.aws.ec2_instance_info:
+        filters:
+          "tag:Name": "{{ instance_name }}"
+      register: ec2_instance 
+
+- name: Join instance to domain 
+  hosts: "{{ ec2_instance.instances[0].public_ip_address }}"
   roles:
-  - join-domain
+    - join-domain
