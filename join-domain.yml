@@ -40,6 +40,8 @@
 
 - name: Join instance to domain 
   hosts: temp_domain
+  vars: 
+    name: "{{ name }}"
   roles:
     - join-domain
 
