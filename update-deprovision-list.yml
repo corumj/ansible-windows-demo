@@ -48,14 +48,6 @@
         tower_host: https://localhost
         tower_verify_ssl: false
 
-    - name: Set stats experiment 
-      set_fact:
-        instances: "{{ ec2_instances | json_query('instances[*].{ name: tags.Name, ip: public_ip_address }') }}"
-
-    - name: print it so we can see it 
-      debug:
-        var: instances 
-
     - name: Update hosts list for join domain 
       awx.awx.tower_job_template:
         name: "Join Domain"
@@ -80,7 +72,7 @@
                     "min": null,
                     "max": null,
                     "default": "",
-                    "choices": "{{ ec2_instances | json_query('instances[*].{ name: tags.Name, ip: public_ip_address }') | join('\n') | default('nobody\nbut\nus\nservers\nhere') }}"
+                    "choices": "{{ ec2_instances | json_query('instances[*].tags.Name') | join('\n') | default('nobody\nbut\nus\nservers\nhere') }}"
                 }
             ]
           }
