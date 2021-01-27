@@ -57,7 +57,7 @@
         playbook: "join-domain.yml"
         credentials: 
           - "AWS Console"
-          - "Tower Credentials"
+          - "Tower Credential"
           - "AWS Windows Machine"
         survey_enabled: yes 
         survey_spec: | 
