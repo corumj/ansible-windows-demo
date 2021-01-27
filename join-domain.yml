@@ -1,6 +1,10 @@
 - name: Retrieve AWS connection info for instance
   hosts: localhost 
   connection: local 
+  vars:
+    ec2_instance:
+      instances:
+        - ip: 127.0.0.1
   tasks:
     - name: Retrieve Instance Info
       community.aws.ec2_instance_info:
@@ -12,20 +16,17 @@
           instance-state-name: ["running"]
       register: ec2_instance 
 
-    - set_fact:
-        ec2: "{{ ec2_instance }}"
-
 - name: debug 
   hosts: localhost 
   connection: local 
   tasks:
     - name: debug 
       debug:
-        var: ec2 
+        var: ec2_instance 
 
     - name: debug try to get ip 
       debug:
-        msg: "{{ ec2.instances[0].public_ip_address }}"
+        msg: "{{ ec2_instance.instances[0].public_ip_address }}"
 
 # - name: Join instance to domain 
 #   hosts: "{{ ec2_instance.instances[0].public_ip_address }}"
