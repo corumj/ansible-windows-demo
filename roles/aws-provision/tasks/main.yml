@@ -40,7 +40,7 @@
         region: "{{ region }}"
         tags: 
           app: "{{ app }}"
-          function: "{{ function }}-{{ name }}"
+          function: "{{ function }}"
         user_data: "{{ lookup('template', 'userdata.txt.j2') }}"
         wait: yes
       register: ec2 
@@ -68,7 +68,7 @@
         tower_verify_ssl: false
       loop:
         - windows 
-        - "{{ function }}-{{ name }}"
+        - "{{ function }}"
 
     - name: Update deprovision list 
       awx.awx.tower_job_launch:
