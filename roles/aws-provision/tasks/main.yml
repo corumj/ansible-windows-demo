@@ -8,11 +8,7 @@
       instance-state-name: ["pending", "running"]
   register: existing
 
-- name: Debug this to see what it's like empty 
-  debug: 
-    var: existing 
-
-- name: Retrieve required AWS infrastructure ID's 
+- name: Provision
   block:
     - amazon.aws.ec2_vpc_subnet_info:
         region: "{{ region }}"
@@ -31,8 +27,6 @@
           "tag:Name": "{{ id }}-sec-group"
       register: sec_info
 
-- name: Provision
-  block:
     - name: Provision ec2 instance 
       community.aws.ec2_instance:
         state: present
