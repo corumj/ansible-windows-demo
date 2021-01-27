@@ -140,6 +140,7 @@
         inventory: "AWS"
         project: "Windows Ops"
         playbook: "ad-controller-setup.yml"
+        limit: "{{ function }}-{{ name }}"
         credentials: 
           - "AWS Console"
           - "Tower Credential"
