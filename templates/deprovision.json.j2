@@ -11,7 +11,7 @@
           "min": null,
           "max": null,
           "default": "",
-          "choices": "{{ ec2_instances | json_query('instances[*].tags.Name') | join('\\n') | default('nobody\nbut\nus\nservers\nhere')"
+          "choices": "{{ ec2_instances | json_query('instances[*].tags.Name') | join('\n') | default('nobody\nbut\nus\nservers\nhere')"
       }
   ]
 }
