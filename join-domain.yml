@@ -4,8 +4,12 @@
   tasks:
     - name: Retrieve Instance Info
       community.aws.ec2_instance_info:
+        region: "{{ region }}"
+        aws_access_key: "{{ lookup('env', 'AWS_ACCESS_KEY_ID') }}"
+        aws_secret_key: "{{ lookup('env', 'AWS_SECRET_ACCESS_KEY') }}"
         filters:
           "tag:Name": "{{ instance_name }}"
+          instance-state-name: ["running"]
       register: ec2_instance 
 
 - name: Join instance to domain 
