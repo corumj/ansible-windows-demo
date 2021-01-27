@@ -236,6 +236,7 @@
         job_tags: "single"
         credentials: 
           - "AWS Console"
+          - "Tower Credential"
         survey_enabled: yes 
         survey_spec: "{{ lookup('file', 'files/deprovision.json') }}"
         state: "present"
