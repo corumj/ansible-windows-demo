@@ -16,7 +16,7 @@
   hosts: localhost 
   connection: local 
   vars:
-    json_name: "{{ instance_name | to_json }}"
+    json_name: "{{ instance_name | from_json }}"
   tasks:
     - name: debug 
       debug:
