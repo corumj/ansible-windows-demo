@@ -216,6 +216,11 @@
         tower_host: https://localhost
         tower_verify_ssl: false
 
+    - name: create deprovision survey from template 
+      template:
+        src: deprovision.json.j2
+        dest: files/deprovision.json
+
     - name: Create deprovision single EC2 Instance
       awx.awx.tower_job_template:
         name: "Deprovision Specific EC2 Instance"
@@ -227,7 +232,7 @@
         credentials: 
           - "AWS Console"
         survey_enabled: yes 
-        survey_spec: deprovision.json
+        survey_spec: "{{ lookup('file', 'files/deprovision.json') }}"
         state: "present"
         tower_username: "{{ tower_username }}"
         tower_password: "{{ tower_password }}"
@@ -244,7 +249,7 @@
         credentials: 
           - "AWS Console"
         survey_enabled: yes 
-        survey_spec: provision-survey.json
+        survey_spec: "{{ lookup('file', 'files/provision-survey.json') }}"
         state: "present"
         tower_username: "{{ tower_username }}"
         tower_password: "{{ tower_password }}"
