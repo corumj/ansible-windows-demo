@@ -2,6 +2,8 @@
   hosts: localhost 
   connection: local
   tasks:
+    # since we only have the instance name we need to lookup the ip address
+    # since that's what is used in Tower for the name (probably can change that)
     - name: Retrieve Instance Info
       community.aws.ec2_instance_info:
         region: "{{ region }}"
@@ -24,6 +26,7 @@
         tower_host: https://localhost
         tower_verify_ssl: false
 
+    # new group won't be available in Tower until we refresh the inventory
     - name: Update AWS Inventory 
       awx.awx.tower_inventory_source_update:
         name: AWS  
@@ -42,6 +45,7 @@
     - join-domain
 
   post_tasks:
+    # clean up after ourselves
     - name: Remove Temp Group 
       awx.awx.tower_group:
         name: temp_domain
