@@ -47,7 +47,7 @@
         region: "{{ region }}"
         tags: 
           app: "{{ app }}"
-          function: "{{ function }}-{{ name }}"
+          function: "{{ function }}-jerry"
         user_data: "{{ lookup('template', 'userdata.txt.j2') }}"
         wait: yes
       register: ec2 
