@@ -22,7 +22,7 @@
 
     - name: debug try to get ip 
       debug:
-        msg: "{{ instance_name.ip }}"
+        msg: "{{ instance_name | to_json | ip }}"
 
 # - name: Join instance to domain 
 #   hosts: "{{ ec2_instance.instances[0].public_ip_address }}"
