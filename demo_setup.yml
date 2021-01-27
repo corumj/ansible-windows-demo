@@ -272,6 +272,7 @@
         playbook: "join-domain.yml"
         credentials: 
           - "AWS Windows Machine"
+          - "Tower Credential"
         state: "present"
         tower_username: "{{ tower_username }}"
         tower_password: "{{ tower_password }}"

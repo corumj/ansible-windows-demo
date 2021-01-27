@@ -16,6 +16,17 @@
           instance-state-name: ["running"]
       register: ec2_instance 
 
+    - name: Add host to temporary group 
+      awx.awx.tower_group:
+        name: "{{ ec2_instance.instances[0].public_ip_address }}"
+        ansible_host: "{{ ec2_instance.instances[0].public_ip_address }}"
+        group: temp_domain
+        state: present 
+        tower_username: "{{ lookup('env', 'TOWER_USERNAME') }}"
+        tower_password: "{{ lookup('env', 'TOWER_PASSWORD') }}"
+        tower_host: https://localhost
+        tower_verify_ssl: false
+
 # - name: debug 
 #   hosts: localhost 
 #   connection: local 
@@ -29,6 +40,20 @@
 #         msg: "{{ ec2_instance.instances[0].public_ip_address }}"
 
 - name: Join instance to domain 
-  hosts: "{{ ec2_instance.instances[0].public_ip_address }}"
+  hosts: temp_domain
   roles:
     - join-domain
+
+  post_tasks:
+    - name: Remove temp group 
+      awx.awx.tower_group:
+        name: "{{ ec2_instance.instances[0].public_ip_address }}"
+        ansible_host: "{{ ec2_instance.instances[0].public_ip_address }}"
+        group: temp_domain
+        state: absent 
+        tower_username: "{{ lookup('env', 'TOWER_USERNAME') }}"
+        tower_password: "{{ lookup('env', 'TOWER_PASSWORD') }}"
+        tower_host: https://localhost
+        tower_verify_ssl: false
+      
+    
