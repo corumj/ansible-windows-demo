@@ -1,5 +1,6 @@
 - name: Retrieve AWS connection info for instance
-  hosts: all
+  hosts: localhost 
+  connection: local 
   tasks:
     - name: Retrieve Instance Info
       community.aws.ec2_instance_info:
