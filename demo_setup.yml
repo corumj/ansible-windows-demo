@@ -293,6 +293,9 @@
     - name: Schedule update of survey host list 
       awx.awx.tower_schedule:
         name: "Update deprovision survey list"
+        state: present 
+        unified_job_template: "Update deprovision survey list"
+        rrule: "DTSTART:20191219T130551Z RRULE:FREQ=MINUTE;INTERVAL=5;COUNT=1"
         tower_username: "{{ tower_username }}"
         tower_password: "{{ tower_password }}"
         tower_host: https://localhost
