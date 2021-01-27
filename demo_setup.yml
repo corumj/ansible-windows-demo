@@ -3,13 +3,13 @@
   hosts: localhost
   connection: local
   vars:
+    function: ad_server
     ec2_instances: 
       instances: []
   tasks:
     - name: import login credentials for Tower
       include_vars: "{{lookup('first_found', login_info)}}"
       vars:
-        function: ad_server 
         login_info:
           - 'private.yml'
           - 'login_info.yml'
