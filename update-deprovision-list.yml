@@ -51,11 +51,11 @@
     - name: Set stats experiment 
       set_stats:
         data: 
-          test: "{{ ec2_instances | json_query('instances[*].{ name: tags.Name, ip: public_ip_address }') }}"
+          instances: "{{ ec2_instances | json_query('instances[*].{ name: tags.Name, ip: public_ip_address }') }}"
 
     - name: print it so we can see it 
       debug:
-        var: test 
+        var: instances 
 
     - name: Update hosts list for join domain 
       awx.awx.tower_job_template:
