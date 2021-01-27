@@ -53,5 +53,6 @@
         tower_password: "{{ lookup('env', 'TOWER_PASSWORD') }}"
         tower_host: https://localhost
         tower_verify_ssl: false
+      delegate_to: localhost
       
     
