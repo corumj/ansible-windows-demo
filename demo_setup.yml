@@ -271,6 +271,7 @@
         project: "Windows Ops"
         playbook: "join-domain.yml"
         credentials: 
+          - "AWS Console"
           - "AWS Windows Machine"
           - "Tower Credential"
         state: "present"
