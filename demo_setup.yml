@@ -2,6 +2,8 @@
 - name: Setup Demo Environment
   hosts: localhost
   connection: local
+  vars:
+    ec2_instances: {}
   tasks:
     - name: import login credentials for Tower
       include_vars: "{{lookup('first_found', login_info)}}"
