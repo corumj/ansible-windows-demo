@@ -253,6 +253,7 @@
         playbook: "provision.yml"
         credentials: 
           - "AWS Console"
+          - "Tower Credential"
         survey_enabled: yes 
         survey_spec: "{{ lookup('file', 'files/provision-survey.json') }}"
         state: "present"
