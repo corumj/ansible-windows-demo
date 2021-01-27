@@ -141,7 +141,7 @@
         inventory: "AWS"
         project: "Windows Ops"
         playbook: "ad-controller-setup.yml"
-        limit: "{{ function }}-{{ name }}"
+        limit: "{{ function }}"
         credentials: 
           - "AWS Console"
           - "Tower Credential"
@@ -296,16 +296,16 @@
         tower_host: https://localhost
         tower_verify_ssl: false
 
-    - name: Schedule update of survey host list 
-      awx.awx.tower_schedule:
-        name: "Update deprovision survey list"
-        state: present 
-        unified_job_template: "Update deprovision survey list"
-        rrule: "DTSTART:20191219T130551Z RRULE:FREQ=MINUTELY;INTERVAL=5"
-        tower_username: "{{ tower_username }}"
-        tower_password: "{{ tower_password }}"
-        tower_host: https://localhost
-        tower_verify_ssl: false
+    # - name: Schedule update of survey host list 
+    #   awx.awx.tower_schedule:
+    #     name: "Update deprovision survey list"
+    #     state: present 
+    #     unified_job_template: "Update deprovision survey list"
+    #     rrule: "DTSTART:20191219T130551Z RRULE:FREQ=MINUTELY;INTERVAL=5"
+    #     tower_username: "{{ tower_username }}"
+    #     tower_password: "{{ tower_password }}"
+    #     tower_host: https://localhost
+    #     tower_verify_ssl: false
 
 #     - name: Create Windows Update job template
 #       awx.awx.tower_job_template:
