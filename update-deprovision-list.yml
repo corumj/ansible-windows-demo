@@ -28,7 +28,7 @@
 
     - name: print it so we can see whats going on 
       debug:
-        var: survey_spec_path | from_json
+        var: survey_spec_path
 
     - name: Update deprovision single EC2 Instance
       awx.awx.tower_job_template:
