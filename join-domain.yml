@@ -20,7 +20,7 @@
   tasks:
     - name: debug 
       debug:
-        var: instance_name 
+        var: json_name 
 
     - name: debug try to get ip 
       debug:
