@@ -28,7 +28,7 @@
 
     - name: print it so we can see whats going on 
       debug:
-        var: survey_spec_path | to_json
+        var: survey_spec_path | from_json
 
     - name: Update deprovision single EC2 Instance
       awx.awx.tower_job_template:
@@ -41,7 +41,7 @@
         credentials: 
           - "AWS Console"
         survey_enabled: yes 
-        survey_spec: "{{ survey_spec_path | to_json }}"
+        survey_spec: "{{ survey_spec_path | from_json }}"
         state: "present"
         tower_username: "{{ lookup('env', 'TOWER_USERNAME') }}"
         tower_password: "{{ lookup('env', 'TOWER_PASSWORD') }}"
