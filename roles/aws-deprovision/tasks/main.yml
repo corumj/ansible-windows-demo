@@ -61,7 +61,7 @@
         aws_access_key: "{{ lookup('env', 'AWS_ACCESS_KEY_ID') }}"
         aws_secret_key: "{{ lookup('env', 'AWS_SECRET_ACCESS_KEY') }}"
         filters:
-          "tag:Name": "ansible-{{ ec2_instance_name }}-{{ name }}"
+          "tag:Name": "{{ ec2_instance_name }}"
   tags:
     - never 
     - single    
