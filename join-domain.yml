@@ -1,4 +1,4 @@
 - name: Join server to the domain
-  hosts: all
+  hosts: "{{ instance_name }}"
   roles:
   - join-domain
