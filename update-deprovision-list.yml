@@ -13,14 +13,16 @@
           instance-state-name: ["pending", "running"]
       register: ec2_instances 
 
-    - name: Print 
-      debug:
-        var: ec2_instances
+    - name: Create a temporary place for survey template 
+      tempfile:
+        state: directory
+        suffix: template 
+      register: tmp 
 
     - name: Create survey spec file 
       template:
         src: deprovision.json.j2
-        dest: deprovision.json
+        dest: "{{ tmp.path }}/deprovision.json"
 
     - name: Update deprovision single EC2 Instance
       awx.awx.tower_job_template:
@@ -33,7 +35,7 @@
         credentials: 
           - "AWS Console"
         survey_enabled: yes 
-        survey_spec: "{{ lookup('file', 'deprovision.json') }}"
+        survey_spec: "{{ lookup('file', '{{ tmp.path }}/deprovision.json') }}"
         state: "present"
         tower_username: "{{ lookup('env', 'TOWER_USERNAME') }}"
         tower_password: "{{ lookup('env', 'TOWER_PASSWORD') }}"
