@@ -15,6 +15,8 @@
 - name: debug 
   hosts: localhost 
   connection: local 
+  var:
+    json_name: "{{ instance_name | to_json }}"
   tasks:
     - name: debug 
       debug:
@@ -22,7 +24,7 @@
 
     - name: debug try to get ip 
       debug:
-        msg: "{{ instance_name | to_json | ip }}"
+        msg: "{{ json_name.ip }}"
 
 # - name: Join instance to domain 
 #   hosts: "{{ ec2_instance.instances[0].public_ip_address }}"
