@@ -16,19 +16,19 @@
           instance-state-name: ["running"]
       register: ec2_instance 
 
-- name: debug 
-  hosts: localhost 
-  connection: local 
-  tasks:
-    - name: debug 
-      debug:
-        var: ec2_instance 
+# - name: debug 
+#   hosts: localhost 
+#   connection: local 
+#   tasks:
+#     - name: debug 
+#       debug:
+#         var: ec2_instance 
 
-    - name: debug try to get ip 
-      debug:
-        msg: "{{ ec2_instance.instances[0].public_ip_address }}"
+#     - name: debug try to get ip 
+#       debug:
+#         msg: "{{ ec2_instance.instances[0].public_ip_address }}"
 
-# - name: Join instance to domain 
-#   hosts: "{{ ec2_instance.instances[0].public_ip_address }}"
-#   roles:
-#     - join-domain
+- name: Join instance to domain 
+  hosts: "{{ ec2_instance.instances[0].public_ip_address }}"
+  roles:
+    - join-domain
