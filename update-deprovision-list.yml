@@ -20,7 +20,7 @@
     - name: Create survey spec file 
       template:
         src: deprovision.json.j2
-        dest: "deprovision.json"
+        dest: deprovision.json
 
     - name: Update deprovision single EC2 Instance
       awx.awx.tower_job_template:
