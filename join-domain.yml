@@ -40,13 +40,20 @@
     # - name: Refresh Inventory 
     #   meta: refresh_inventory
 
-    - name: Promote to domain 
+    - name: Promote to domain membership
       include_role:
         name: join-domain 
         apply:
           delegate_to: "{{ ec2_instance.instances[0].public_ip_address }}"
           run_once: true
 
+    - name: Add server name to DNS record 
+      community.windows.win_dns_record:
+        name: "{{ instance_name | regex_search('-([^-]+)-', '\\1') }}.demo.lab"
+        type: "A"
+        value: "{{ ec2_instance.instances[0].public_ip_address }}"
+        zone: "demo.lab"
+      delegate_to: "{{ hostvars[groups['ad_server'][0]]['ec2_private_ip_address'] }}"
 
 # - name: Join instance to domain 
 #   hosts: temp_domain
