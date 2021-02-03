@@ -14,32 +14,6 @@
           instance-state-name: ["running"]
       register: ec2_instance 
 
-    # - name: Add host to temporary group 
-    #   awx.awx.tower_group:
-    #     name: temp_domain
-    #     inventory: "AWS"
-    #     hosts:
-    #       - "{{ ec2_instance.instances[0].public_ip_address }}"
-    #     state: present 
-    #     tower_username: "{{ lookup('env', 'TOWER_USERNAME') }}"
-    #     tower_password: "{{ lookup('env', 'TOWER_PASSWORD') }}"
-    #     tower_host: https://localhost
-    #     tower_verify_ssl: false
-
-    # new group won't be available in Tower until we refresh the inventory
-    # - name: Update AWS Inventory 
-    #   awx.awx.tower_inventory_source_update:
-    #     name: AWS  
-    #     inventory: AWS
-    #     wait: True
-    #     tower_username: "{{ lookup('env', 'TOWER_USERNAME') }}"
-    #     tower_password: "{{ lookup('env', 'TOWER_PASSWORD') }}"
-    #     tower_host: https://localhost
-    #     tower_verify_ssl: false
-
-    # - name: Refresh Inventory 
-    #   meta: refresh_inventory
-
     - name: Promote to domain membership
       include_role:
         name: join-domain 
@@ -53,7 +27,7 @@
         type: "A"
         value: "{{ ec2_instance.instances[0].public_ip_address }}"
         zone: "demo.lab"
-      delegate_to: "{{ hostvars[groups['ad_server'][0]]['ec2_private_ip_address'] }}"
+      delegate_to: "{{ hostvars[groups['ad_server'][0]]['ec2_ip_address'] }}"
 
 # - name: Join instance to domain 
 #   hosts: temp_domain
