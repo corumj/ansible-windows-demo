@@ -63,13 +63,16 @@
         filters:
           "tag:Name": "{{ ec2_instance_name }}"
 
-    - name: Update deprovision list 
-      awx.awx.tower_job_launch:
-        job_template: "Update deprovision survey list"
-        tower_username: "{{ lookup('env', 'TOWER_USERNAME') }}"
-        tower_password: "{{ lookup('env', 'TOWER_PASSWORD') }}"
-        tower_host: https://localhost
-        tower_verify_ssl: false
+    # - name: Update deprovision list 
+    #   awx.awx.tower_job_launch:
+    #     job_template: "Update deprovision survey list"
+    #     tower_username: "{{ lookup('env', 'TOWER_USERNAME') }}"
+    #     tower_password: "{{ lookup('env', 'TOWER_PASSWORD') }}"
+    #     tower_host: https://localhost
+    #     tower_verify_ssl: false
+    - name: Update survey lists 
+      include_role:
+        name: server-list
   tags:
     - never 
     - single    

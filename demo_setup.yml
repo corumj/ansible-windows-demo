@@ -221,29 +221,29 @@
         tower_host: https://localhost
         tower_verify_ssl: false
 
-    - name: create deprovision survey from template 
-      template:
-        src: deprovision.json.j2
-        dest: files/deprovision.json
+    # - name: create deprovision survey from template 
+    #   template:
+    #     src: deprovision.json.j2
+    #     dest: files/deprovision.json
 
-    - name: Create deprovision single EC2 Instance
-      awx.awx.tower_job_template:
-        name: "Deprovision Specific EC2 Instance"
-        job_type: "run"
-        inventory: "AWS"
-        project: "Windows Ops"
-        playbook: "deprovision.yml"
-        job_tags: "single"
-        credentials: 
-          - "AWS Console"
-          - "Tower Credential"
-        survey_enabled: yes 
-        survey_spec: "{{ lookup('file', 'files/deprovision.json') }}"
-        state: "present"
-        tower_username: "{{ tower_username }}"
-        tower_password: "{{ tower_password }}"
-        tower_host: https://localhost
-        tower_verify_ssl: false
+    # - name: Create deprovision single EC2 Instance
+    #   awx.awx.tower_job_template:
+    #     name: "Deprovision Specific EC2 Instance"
+    #     job_type: "run"
+    #     inventory: "AWS"
+    #     project: "Windows Ops"
+    #     playbook: "deprovision.yml"
+    #     job_tags: "single"
+    #     credentials: 
+    #       - "AWS Console"
+    #       - "Tower Credential"
+    #     survey_enabled: yes 
+    #     survey_spec: "{{ lookup('file', 'files/deprovision.json') }}"
+    #     state: "present"
+    #     tower_username: "{{ tower_username }}"
+    #     tower_password: "{{ tower_password }}"
+    #     tower_host: https://localhost
+    #     tower_verify_ssl: false
 
     - name: Create Provision New Server template
       awx.awx.tower_job_template:
@@ -263,26 +263,26 @@
         tower_host: https://localhost
         tower_verify_ssl: false
 
-    - name: Create Join server to domain template
-      awx.awx.tower_job_template:
-        name: "Join Domain"
-        job_type: "run"
-        inventory: "AWS"
-        project: "Windows Ops"
-        playbook: "join-domain.yml"
-        credentials: 
-          - "AWS Console"
-          - "AWS Windows Machine"
-          - "Tower Credential"
-        state: "present"
-        tower_username: "{{ tower_username }}"
-        tower_password: "{{ tower_password }}"
-        tower_host: https://localhost
-        tower_verify_ssl: false
+    # - name: Create Join server to domain template
+    #   awx.awx.tower_job_template:
+    #     name: "Join Domain"
+    #     job_type: "run"
+    #     inventory: "AWS"
+    #     project: "Windows Ops"
+    #     playbook: "join-domain.yml"
+    #     credentials: 
+    #       - "AWS Console"
+    #       - "AWS Windows Machine"
+    #       - "Tower Credential"
+    #     state: "present"
+    #     tower_username: "{{ tower_username }}"
+    #     tower_password: "{{ tower_password }}"
+    #     tower_host: https://localhost
+    #     tower_verify_ssl: false
 
     - name: Create deprovision survey list update template 
       awx.awx.tower_job_template:
-        name: "Update deprovision survey list"
+        name: "Update host list for surveys"
         job_type: "run"
         inventory: "AWS"
         project: "Windows Ops"

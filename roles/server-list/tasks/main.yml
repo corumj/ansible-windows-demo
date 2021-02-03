@@ -1,0 +1,82 @@
+---
+- name: gather list of servers available 
+  community.aws.ec2_instance_info:
+    region: "{{ region }}"
+    aws_access_key: "{{ lookup('env', 'AWS_ACCESS_KEY_ID') }}"
+    aws_secret_key: "{{ lookup('env', 'AWS_SECRET_ACCESS_KEY') }}"
+    filters:
+      "tag:app": "{{ app }}"
+      instance-state-name: ["pending", "running"]
+  register: ec2_instances 
+
+- name: Update host list for deprovisioning
+  awx.awx.tower_job_template:
+    name: "Deprovision Specific EC2 Instance"
+    job_type: "run"
+    inventory: "AWS"
+    project: "Windows Ops"
+    playbook: "deprovision.yml"
+    job_tags: "single"
+    credentials: 
+      - "AWS Console"
+      - "Tower Credential"
+    survey_enabled: yes 
+    survey_spec: | 
+      {
+        "name": "",
+        "description": "",
+        "spec": [
+            {
+                "question_name": "Select a server to deprovision",
+                "question_description": "",
+                "required": true,
+                "type": "multiplechoice",
+                "variable": "instance_name",
+                "min": null,
+                "max": null,
+                "default": "",
+                "choices": "{{ ec2_instances | json_query('instances[*].tags.Name') | join('\n') | default('nobody\nbut\nus\nservers\nhere') }}"
+            }
+        ]
+      }
+    state: "present"
+    tower_username: "{{ lookup('env', 'TOWER_USERNAME') }}"
+    tower_password: "{{ lookup('env', 'TOWER_PASSWORD') }}"
+    tower_host: https://localhost
+    tower_verify_ssl: false
+
+- name: Update hosts list for join domain 
+  awx.awx.tower_job_template:
+    name: "Join Domain"
+    job_type: "run"
+    inventory: "AWS"
+    project: "Windows Ops"
+    playbook: "join-domain.yml"
+    credentials: 
+      - "AWS Console"
+      - "Tower Credential"
+      - "AWS Windows Machine"
+    survey_enabled: yes 
+    survey_spec: | 
+      {
+        "name": "",
+        "description": "",
+        "spec": [
+            {
+                "question_name": "Select a server to join to demo.lab",
+                "question_description": "",
+                "required": true,
+                "type": "multiplechoice",
+                "variable": "instance_name",
+                "min": null,
+                "max": null,
+                "default": "",
+                "choices": "{{ ec2_instances | json_query('instances[*].tags.Name') | join('\n') | default('nobody\nbut\nus\nservers\nhere') }}"
+            }
+        ]
+      }
+    state: "present"
+    tower_username: "{{ lookup('env', 'TOWER_USERNAME') }}"
+    tower_password: "{{ lookup('env', 'TOWER_PASSWORD') }}"
+    tower_host: https://localhost
+    tower_verify_ssl: false

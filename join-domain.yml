@@ -14,17 +14,17 @@
           instance-state-name: ["running"]
       register: ec2_instance 
 
-    - name: Add host to temporary group 
-      awx.awx.tower_group:
-        name: temp_domain
-        inventory: "AWS"
-        hosts:
-          - "{{ ec2_instance.instances[0].public_ip_address }}"
-        state: present 
-        tower_username: "{{ lookup('env', 'TOWER_USERNAME') }}"
-        tower_password: "{{ lookup('env', 'TOWER_PASSWORD') }}"
-        tower_host: https://localhost
-        tower_verify_ssl: false
+    # - name: Add host to temporary group 
+    #   awx.awx.tower_group:
+    #     name: temp_domain
+    #     inventory: "AWS"
+    #     hosts:
+    #       - "{{ ec2_instance.instances[0].public_ip_address }}"
+    #     state: present 
+    #     tower_username: "{{ lookup('env', 'TOWER_USERNAME') }}"
+    #     tower_password: "{{ lookup('env', 'TOWER_PASSWORD') }}"
+    #     tower_host: https://localhost
+    #     tower_verify_ssl: false
 
     # new group won't be available in Tower until we refresh the inventory
     # - name: Update AWS Inventory 
@@ -37,8 +37,8 @@
     #     tower_host: https://localhost
     #     tower_verify_ssl: false
 
-    - name: Refresh Inventory 
-      meta: refresh_inventory
+    # - name: Refresh Inventory 
+    #   meta: refresh_inventory
 
     - name: Promote to domain 
       include_role:
