@@ -37,6 +37,9 @@
         tower_host: https://localhost
         tower_verify_ssl: false
 
+    - name: Refresh Inventory 
+      meta: refresh_inventory
+
 - name: Join instance to domain 
   hosts: temp_domain
   roles:
