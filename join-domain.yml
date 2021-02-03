@@ -27,35 +27,43 @@
         tower_verify_ssl: false
 
     # new group won't be available in Tower until we refresh the inventory
-    - name: Update AWS Inventory 
-      awx.awx.tower_inventory_source_update:
-        name: AWS  
-        inventory: AWS
-        wait: True
-        tower_username: "{{ lookup('env', 'TOWER_USERNAME') }}"
-        tower_password: "{{ lookup('env', 'TOWER_PASSWORD') }}"
-        tower_host: https://localhost
-        tower_verify_ssl: false
+    # - name: Update AWS Inventory 
+    #   awx.awx.tower_inventory_source_update:
+    #     name: AWS  
+    #     inventory: AWS
+    #     wait: True
+    #     tower_username: "{{ lookup('env', 'TOWER_USERNAME') }}"
+    #     tower_password: "{{ lookup('env', 'TOWER_PASSWORD') }}"
+    #     tower_host: https://localhost
+    #     tower_verify_ssl: false
 
     - name: Refresh Inventory 
       meta: refresh_inventory
 
-- name: Join instance to domain 
-  hosts: temp_domain
-  roles:
-    - join-domain
+    - name: Promote to domain 
+      include_role:
+        name: join-domain 
+        apply:
+          delegate_to: "{{ ec2_instance.instances[0].public_ip_address }}"
+          run_once: true
 
-  post_tasks:
-    # clean up after ourselves
-    - name: Remove Temp Group 
-      awx.awx.tower_group:
-        name: temp_domain
-        inventory: "AWS"
-        state: absent 
-        tower_username: "{{ lookup('env', 'TOWER_USERNAME') }}"
-        tower_password: "{{ lookup('env', 'TOWER_PASSWORD') }}"
-        tower_host: https://localhost
-        tower_verify_ssl: false
-      delegate_to: localhost
+
+# - name: Join instance to domain 
+#   hosts: temp_domain
+#   roles:
+#     - join-domain
+
+#   post_tasks:
+#     # clean up after ourselves
+#     - name: Remove Temp Group 
+#       awx.awx.tower_group:
+#         name: temp_domain
+#         inventory: "AWS"
+#         state: absent 
+#         tower_username: "{{ lookup('env', 'TOWER_USERNAME') }}"
+#         tower_password: "{{ lookup('env', 'TOWER_PASSWORD') }}"
+#         tower_host: https://localhost
+#         tower_verify_ssl: false
+#       delegate_to: localhost
       
     
