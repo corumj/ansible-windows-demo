@@ -28,23 +28,4 @@
         value: "{{ ec2_instance.instances[0].public_ip_address }}"
         zone: "demo.lab"
       delegate_to: "{{ hostvars[groups['ad_server'][0]]['ec2_ip_address'] }}"
-
-# - name: Join instance to domain 
-#   hosts: temp_domain
-#   roles:
-#     - join-domain
-
-#   post_tasks:
-#     # clean up after ourselves
-#     - name: Remove Temp Group 
-#       awx.awx.tower_group:
-#         name: temp_domain
-#         inventory: "AWS"
-#         state: absent 
-#         tower_username: "{{ lookup('env', 'TOWER_USERNAME') }}"
-#         tower_password: "{{ lookup('env', 'TOWER_PASSWORD') }}"
-#         tower_host: https://localhost
-#         tower_verify_ssl: false
-#       delegate_to: localhost
-      
     
