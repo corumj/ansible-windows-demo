@@ -1,0 +1,30 @@
+{
+  "name": "",
+  "description": "",
+  "spec": [
+      {
+          "question_name": "Please enter a short (4-8 chars) name of the business you'd like to setup",
+          "question_description": "Short name of business to setup domain controller and assoc. variables",
+          "required": true,
+          "type": "text",
+          "variable": "survey_business_domain_name",
+          "min": 0,
+          "max": 10,
+          "default": "",
+          "choices": "",
+          "new_question": true
+      },
+      {
+        "question_name": "Please enter a new windows domain administrator password",
+        "question_description": "Used for creating the domain administrator account",
+        "required": true,
+        "type": "password",
+        "variable": "survey_win_initial_password",
+        "min": 0,
+        "max": 10,
+        "default": "",
+        "choices": "",
+        "new_question": true
+    }
+  ]
+}

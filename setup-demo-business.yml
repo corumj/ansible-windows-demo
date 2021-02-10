@@ -1,0 +1,31 @@
+---
+- name: Provision Business
+  hosts: localhost 
+  connection: local 
+  gather_facts: false
+  vars: 
+    group_name: ad_server
+    short_desc: ActiveDirectory
+    server_env: test 
+    server_os: windows
+    business_domain_name: "{{ survey_business_domain_name }}"
+    win_initial_password: "{{ survey_win_initial_password }}"
+  tasks:
+    - name: Setup AWS infrastructure 
+      include_role:
+        name: aws-setup
+    
+    # - name: Create business domain Tower group 
+    #   awx.awx.tower_group: 
+    #     name: "{{ business_domain_name }}" 
+    #     inventory: AWS  
+    #     hosts:
+    #       - "{{ ec2.instances[0].public_ip_address }}"        
+    #     state: present 
+    #     tower_username: "{{ lookup('env', 'TOWER_USERNAME') }}"
+    #     tower_password: "{{ lookup('env', 'TOWER_PASSWORD') }}"
+    #     tower_host: https://localhost
+    #     tower_verify_ssl: false
+  # roles:
+  #   - aws-setup
+  #   - aws-provision-windows 

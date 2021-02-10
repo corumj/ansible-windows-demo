@@ -83,37 +83,55 @@
         tower_host: https://localhost
         tower_verify_ssl: false
 
-    - name: Create a temp group 
-      awx.awx.tower_group: 
-        name: temp 
-        inventory: AWS
-        hosts:
-          localhost  
-        variables:
-          ansible_win_pw: "{{ lookup('password','/dev/null length=15') }}"
-        state: present 
+    - name: Create Setup Business Template
+     awx.awx.tower_job_template:
+        name: "1. Setup Business"
+        job_type: "run"
+        inventory: "AWS"
+        project: "Windows Ops"
+        playbook: "setup-demo-business.yml"
+        credentials: 
+          - "AWS Console"
+          - "Tower Credential"
+        survey_enabled: yes 
+        survey_spec: "{{ lookup('file', 'files/setup-business-survey.json') }}"
+        state: "present"
         tower_username: "{{ tower_username }}"
         tower_password: "{{ tower_password }}"
         tower_host: https://localhost
         tower_verify_ssl: false
 
-    - name: Create AWS Machine Credential 
-      awx.awx.tower_credential:
-        state: present 
-        name: AWS Windows Machine 
-        description: AWS Windows Machine Credential 
-        organization: Default 
-        credential_type: Machine 
-        inputs:
-          username: Administrator
-          password: "{{ hostvars['localhost']['ansible_win_pw'] }}"
-          become_method: runas 
-          become_username: Administrator 
-          become_password: "{{ hostvars['localhost']['ansible_win_pw'] }}"
-        tower_username: "{{ tower_username }}"
-        tower_password: "{{ tower_password }}"
-        tower_host: https://localhost
-        tower_verify_ssl: false
+    # - name: Create a temp group 
+    #   awx.awx.tower_group: 
+    #     name: temp 
+    #     inventory: AWS
+    #     hosts:
+    #       localhost  
+    #     variables:
+    #       ansible_win_pw: "{{ lookup('password','/dev/null length=15') }}"
+    #     state: present 
+    #     tower_username: "{{ tower_username }}"
+    #     tower_password: "{{ tower_password }}"
+    #     tower_host: https://localhost
+    #     tower_verify_ssl: false
+
+    # - name: Create AWS Machine Credential 
+    #   awx.awx.tower_credential:
+    #     state: present 
+    #     name: AWS Windows Machine 
+    #     description: AWS Windows Machine Credential 
+    #     organization: Default 
+    #     credential_type: Machine 
+    #     inputs:
+    #       username: Administrator
+    #       password: "{{ hostvars['localhost']['ansible_win_pw'] }}"
+    #       become_method: runas 
+    #       become_username: Administrator 
+    #       become_password: "{{ hostvars['localhost']['ansible_win_pw'] }}"
+    #     tower_username: "{{ tower_username }}"
+    #     tower_password: "{{ tower_password }}"
+    #     tower_host: https://localhost
+    #     tower_verify_ssl: false
 
     # - name: Create Amazon Infrastructure Setup
     #   awx.awx.tower_job_template:

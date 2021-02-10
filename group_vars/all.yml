@@ -6,13 +6,13 @@ server_name: "{{ server_env }}-{{ server_os }}-{{ short_desc }}-{{ server_random
 
 
 # This will soon randomly generate a password for the windows servers (when I figure it out)
-win_initial_password: Redhat1! # "{{ lookup('password','/dev/null length=15') }}"
+win_initial_password: "{{ win_initial_password | default('Redhat1!') }}" # "{{ lookup('password','/dev/null length=15') }}"
 
 # static, please don't change below unless you want a challenge
  
-app: ansible-demo-{{ server_random }}
-aws_key_name: ansible-demo-key-{{ server_random }}
-id: "ansible-{{ server_random }}"
+app: ansible-demo-{{ business_domain_name }}
+aws_key_name: ansible-demo-key-{{ business_domain_name }}
+id: "ansible-{{ business_domain_name }}"
 
 region: us-east-1
 
