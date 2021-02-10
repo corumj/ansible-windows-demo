@@ -28,7 +28,7 @@
         inventory: AWS  
         hosts:
           - "{{ ec2.instances[0].public_ip_address }}"  
-        vars:
+        variables:
           business_domain_name: "{{ survey_business_domain_name }}"   
           win_initial_password: "{{ survey_win_initial_password }}"
         state: present 
