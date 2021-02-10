@@ -84,7 +84,7 @@
         tower_verify_ssl: false
 
     - name: Create Setup Business Template
-     awx.awx.tower_job_template:
+      awx.awx.tower_job_template:
         name: "1. Setup Business"
         job_type: "run"
         inventory: "AWS"
