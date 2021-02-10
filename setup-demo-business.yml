@@ -27,7 +27,7 @@
         filters:
           "tag:group_name": ad_server
           instance-state-name: ["running"]
-      when: not ec2.instances 
+      when: not ec2.changed 
       register: ec2
 
     - name: Create business domain group in Tower
