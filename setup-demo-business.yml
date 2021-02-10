@@ -22,6 +22,14 @@
     - name: Refresh Inventory 
       meta: refresh_inventory
 
+    - name: Check if domain server instance already exist
+      community.aws.ec2_instance_info:
+        filters:
+          "tag:group_name": ad_server
+          instance-state-name: ["running"]
+      when: not ec2 
+      register: ec2
+
     - name: Create business domain group in Tower
       awx.awx.tower_group: 
         name: "{{ business_domain_name }}" 
@@ -36,6 +44,14 @@
         tower_password: "{{ lookup('env', 'TOWER_PASSWORD') }}"
         tower_host: https://localhost
         tower_verify_ssl: false
+
+    - name: Setup Active Directory Domain Services 
+      include_role:
+        name: windows-ad-controller
+        apply:
+          delegate_to: "{{ ec2_instance.instances[0].public_ip_address }}"
+          run_once: true
+
   # roles:
   #   - aws-setup
   #   - aws-provision-windows 

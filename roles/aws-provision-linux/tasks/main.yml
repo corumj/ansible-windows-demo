@@ -1,5 +1,5 @@
 ---
-- name: Provision Windows
+- name: Provision Linux
   block:
     - amazon.aws.ec2_vpc_subnet_info:
         region: "{{ region }}"
@@ -26,7 +26,7 @@
         name: "{{ server_name }}"
         security_group: "{{ sec_info.security_groups[0].group_name }}"
         vpc_subnet_id: "{{ vpc_subnet_info.subnets[0].subnet_id }}"
-        image_id: "{{ aws_windows_ami }}"
+        image_id: "{{ aws_linux_ami }}"
         instance_type: "{{ aws_instance_type }}"
         region: "{{ region }}"
         tags: 
