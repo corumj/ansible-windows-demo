@@ -52,7 +52,7 @@
       include_role:
         name: windows-ad-controller
         apply:
-          delegate_to: "{{ ec2_instance.instances[0].public_ip_address }}"
+          delegate_to: "{{ ec2.instances[0].public_ip_address }}"
           run_once: true
 
   # roles:
