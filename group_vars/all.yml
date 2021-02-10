@@ -3,14 +3,16 @@
 # of shared AWS account collisions, hopefully) 
 server_random: "{{ lookup('password', 'dev/null chars=ascii_uppercase,digits length=5') }}"
 server_name: "{{ server_env }}-{{ server_os }}-{{ short_desc }}-{{ server_random }}"
+
+
 # This will soon randomly generate a password for the windows servers (when I figure it out)
-win_initial_password: RedHat!1 # "{{ lookup('password','/dev/null length=15') }}"
+win_initial_password: Redhat1! # "{{ lookup('password','/dev/null length=15') }}"
 
 # static, please don't change below unless you want a challenge
  
-app: ansible-demo-{{ name }}
-aws_key_name: ansible-demo-key-{{ name }}
-id: "ansible-{{ name }}"
+app: ansible-demo-{{ server_random }}
+aws_key_name: ansible-demo-key-{{ server_random }}
+id: "ansible-{{ server_random }}"
 
 region: us-east-1
 

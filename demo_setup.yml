@@ -43,6 +43,48 @@
         tower_host: https://localhost
         tower_verify_ssl: false
 
+    - name: Create AWS Inventory 
+      awx.awx.tower_inventory: 
+        name: AWS
+        description: AWS Inventory 
+        organization: Default 
+        state: present 
+        tower_username: "{{ tower_username }}"
+        tower_password: "{{ tower_password }}"
+        tower_host: https://localhost
+        tower_verify_ssl: false
+
+    - name: Create AWS Inventory Source
+      awx.awx.tower_inventory_source:
+        state: present  
+        name: AWS 
+        description: AWS inventory source 
+        inventory: AWS  
+        credential: AWS Console  
+        # host_filter: "owner-id: {{ owner.user_id }}"  
+        overwrite: True  
+        update_on_launch: True  
+        source: ec2  
+        tower_username: "{{ tower_username }}"
+        tower_password: "{{ tower_password }}"
+        tower_host: https://localhost
+        tower_verify_ssl: false
+
+    - name: Create the Windows group 
+      awx.awx.tower_group: 
+        name: windows 
+        inventory: AWS  
+        variables:
+          ansible_port: 5986
+          ansible_connection: winrm
+          ansible_winrm_server_cert_validation: ignore
+          ansible_password: "{{ lookup('password','/dev/null length=15') }}"
+        state: present 
+        tower_username: "{{ tower_username }}"
+        tower_password: "{{ tower_password }}"
+        tower_host: https://localhost
+        tower_verify_ssl: false
+
     - name: Create AWS Machine Credential 
       awx.awx.tower_credential:
         state: present 
@@ -61,61 +103,6 @@
         tower_host: https://localhost
         tower_verify_ssl: false
 
-    - name: Create AWS Inventory 
-      awx.awx.tower_inventory: 
-        name: AWS
-        description: AWS Inventory 
-        organization: Default 
-        state: present 
-        tower_username: "{{ tower_username }}"
-        tower_password: "{{ tower_password }}"
-        tower_host: https://localhost
-        tower_verify_ssl: false
-
-    - name: Install boto library for aws 
-      pip:
-        name: boto3 
-        state: present 
-        executable: /usr/bin/pip3.6
-
-    - name: Retrieve AWS user ID for instance filters 
-      amazon.aws.aws_caller_info:
-        aws_access_key: "{{ AWS_ACCESS_KEY_ID }}"
-        aws_secret_key: "{{ AWS_SECRET_ACCESS_KEY }}"
-        security_token: "{{ AWS_SECURITY_TOKEN }}"
-        region: "{{ region }}"
-      register: owner
-
-    - name: Create AWS Inventory Source
-      awx.awx.tower_inventory_source:
-        state: present  
-        name: AWS 
-        description: AWS inventory source 
-        inventory: AWS  
-        credential: AWS Console  
-        host_filter: "owner-id: {{ owner.user_id }}"  
-        overwrite: True  
-        update_on_launch: True  
-        source: ec2  
-        tower_username: "{{ tower_username }}"
-        tower_password: "{{ tower_password }}"
-        tower_host: https://localhost
-        tower_verify_ssl: false
-
-    - name: Create the Windows group 
-      awx.awx.tower_group: 
-        name: windows 
-        inventory: AWS  
-        variables:
-          ansible_port: 5986
-          ansible_connection: winrm
-          ansible_winrm_server_cert_validation: ignore
-        state: present 
-        tower_username: "{{ tower_username }}"
-        tower_password: "{{ tower_password }}"
-        tower_host: https://localhost
-        tower_verify_ssl: false
-        
     - name: Create Amazon Infrastructure Setup
       awx.awx.tower_job_template:
         name: "Amazon Infrastructure Setup"
