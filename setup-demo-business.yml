@@ -48,9 +48,30 @@
         tower_host: https://localhost
         tower_verify_ssl: false
 
+    - name: Create AWS Machine Credential 
+      awx.awx.tower_credential:
+        state: present 
+        name: AWS Windows Machine 
+        description: AWS Windows Machine Credential 
+        organization: Default 
+        credential_type: Machine 
+        inputs:
+          username: Administrator
+          password: "{{ win_initial_password }}"
+          become_method: runas 
+          become_username: Administrator 
+          become_password: "{{ win_initial_password }}"
+        tower_username: "{{ lookup('env', 'TOWER_USERNAME') }}"
+        tower_password: "{{ lookup('env', 'TOWER_PASSWORD') }}"
+        tower_host: https://localhost
+        tower_verify_ssl: false
+
     - name: Setup Active Directory Domain Services 
       include_role:
         name: windows-ad-controller
+        vars:
+          ansible_password: "{{ win_initial_password }}"
+          ansible_user: Administrator
         apply:
           delegate_to: "{{ ec2.instances[0].public_ip_address }}"
           run_once: true
