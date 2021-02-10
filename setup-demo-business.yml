@@ -19,9 +19,8 @@
       include_role:
         name: aws-provision-windows
 
-    - name: debug and print the ec2 variable from role to see if it's accessible 
-      debug:
-        msg: "{{ ec2.instances[0].public_ip_address }}"
+    - name: Refresh Inventory 
+      meta: refresh_inventory
 
     - name: Create business domain group in Tower
       awx.awx.tower_group: 

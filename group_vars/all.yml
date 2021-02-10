@@ -1,12 +1,8 @@
 ---
-# This will generate the unique random name for your server (low risk
-# of shared AWS account collisions, hopefully) 
-server_random: "{{ lookup('password', 'dev/null chars=ascii_uppercase,digits length=5') }}"
-server_name: "{{ server_env }}-{{ server_os }}-{{ short_desc }}-{{ server_random }}"
 
+server_name: "{{ business_domain_name }}-{{ server_env }}-{{ server_os }}-{{ short_desc }}"
 
-# This will soon randomly generate a password for the windows servers (when I figure it out)
-win_initial_password: "{{ win_initial_password | default('Redhat1!') }}" # "{{ lookup('password','/dev/null length=15') }}"
+win_initial_password: "{{ survey_win_initial_password | default('Redhat1!') }}" # "{{ lookup('password','/dev/null length=15') }}"
 
 # static, please don't change below unless you want a challenge
  
