@@ -60,8 +60,7 @@
         name: AWS 
         description: AWS inventory source 
         inventory: AWS  
-        credential: AWS Console  
-        # host_filter: "owner-id: {{ owner.user_id }}"  
+        credential: AWS Console   
         overwrite: True  
         update_on_launch: True  
         source: ec2  
@@ -78,7 +77,20 @@
           ansible_port: 5986
           ansible_connection: winrm
           ansible_winrm_server_cert_validation: ignore
-          ansible_password: "{{ lookup('password','/dev/null length=15') }}"
+        state: present 
+        tower_username: "{{ tower_username }}"
+        tower_password: "{{ tower_password }}"
+        tower_host: https://localhost
+        tower_verify_ssl: false
+
+    - name: Create a temp group 
+      awx.awx.tower_group: 
+        name: temp 
+        inventory: AWS
+        hosts:
+          localhost  
+        variables:
+          ansible_win_pw: "{{ lookup('password','/dev/null length=15') }}"
         state: present 
         tower_username: "{{ tower_username }}"
         tower_password: "{{ tower_password }}"
@@ -94,164 +106,164 @@
         credential_type: Machine 
         inputs:
           username: Administrator
-          password: "{{ win_initial_password }}"
+          password: "{{ hostvars['localhost']['ansible_win_pw'] }}"
           become_method: runas 
           become_username: Administrator 
-          become_password: "{{ win_initial_password }}"
+          become_password: "{{ hostvars['localhost']['ansible_win_pw'] }}"
         tower_username: "{{ tower_username }}"
         tower_password: "{{ tower_password }}"
         tower_host: https://localhost
         tower_verify_ssl: false
 
-    - name: Create Amazon Infrastructure Setup
-      awx.awx.tower_job_template:
-        name: "Amazon Infrastructure Setup"
-        job_type: "run"
-        inventory: "AWS"
-        project: "Windows Ops"
-        playbook: "aws-infrastructure-setup.yml"
-        credentials: 
-          - "AWS Console"
-        state: "present"
-        tower_username: "{{ tower_username }}"
-        tower_password: "{{ tower_password }}"
-        tower_host: https://localhost
-        tower_verify_ssl: false
+    # - name: Create Amazon Infrastructure Setup
+    #   awx.awx.tower_job_template:
+    #     name: "Amazon Infrastructure Setup"
+    #     job_type: "run"
+    #     inventory: "AWS"
+    #     project: "Windows Ops"
+    #     playbook: "aws-infrastructure-setup.yml"
+    #     credentials: 
+    #       - "AWS Console"
+    #     state: "present"
+    #     tower_username: "{{ tower_username }}"
+    #     tower_password: "{{ tower_password }}"
+    #     tower_host: https://localhost
+    #     tower_verify_ssl: false
 
-    - name: Create AD Controller Provision template
-      awx.awx.tower_job_template:
-        name: "AD Controller Provision"
-        job_type: "run"
-        inventory: "AWS"
-        project: "Windows Ops"
-        playbook: "ad-controller-provision.yml"
-        credentials: 
-          - "AWS Console"
-          - "Tower Credential"
-          - "AWS Windows Machine"
-        state: "present"
-        tower_username: "{{ tower_username }}"
-        tower_password: "{{ tower_password }}"
-        tower_host: https://localhost
-        tower_verify_ssl: false
+    # - name: Create AD Controller Provision template
+    #   awx.awx.tower_job_template:
+    #     name: "AD Controller Provision"
+    #     job_type: "run"
+    #     inventory: "AWS"
+    #     project: "Windows Ops"
+    #     playbook: "ad-controller-provision.yml"
+    #     credentials: 
+    #       - "AWS Console"
+    #       - "Tower Credential"
+    #       - "AWS Windows Machine"
+    #     state: "present"
+    #     tower_username: "{{ tower_username }}"
+    #     tower_password: "{{ tower_password }}"
+    #     tower_host: https://localhost
+    #     tower_verify_ssl: false
 
-    - name: Create AD Controller Setup template
-      awx.awx.tower_job_template:
-        name: "AD Controller Setup"
-        job_type: "run"
-        inventory: "AWS"
-        project: "Windows Ops"
-        playbook: "ad-controller-setup.yml"
-        limit: "{{ group_name }}"
-        credentials: 
-          - "AWS Console"
-          - "Tower Credential"
-          - "AWS Windows Machine"
-        state: "present"
-        tower_username: "{{ tower_username }}"
-        tower_password: "{{ tower_password }}"
-        tower_host: https://localhost
-        tower_verify_ssl: false
+    # - name: Create AD Controller Setup template
+    #   awx.awx.tower_job_template:
+    #     name: "AD Controller Setup"
+    #     job_type: "run"
+    #     inventory: "AWS"
+    #     project: "Windows Ops"
+    #     playbook: "ad-controller-setup.yml"
+    #     limit: "{{ group_name }}"
+    #     credentials: 
+    #       - "AWS Console"
+    #       - "Tower Credential"
+    #       - "AWS Windows Machine"
+    #     state: "present"
+    #     tower_username: "{{ tower_username }}"
+    #     tower_password: "{{ tower_password }}"
+    #     tower_host: https://localhost
+    #     tower_verify_ssl: false
 
-    - name: Create Workflow Template to provision and setup AD Controller 
-      block:
-      - name: Create Domain Services Setup workflow template
-        awx.awx.tower_workflow_job_template:
-          name: Domain Services Setup 
-          state: present
-          description: Chain together workflow for provisioning and setting up the Domain Controller
-          organization: Default 
-          tower_username: "{{ tower_username }}"
-          tower_password: "{{ tower_password }}"
-          tower_host: https://localhost
-          tower_verify_ssl: false
+    # - name: Create Workflow Template to provision and setup AD Controller 
+    #   block:
+    #   - name: Create Domain Services Setup workflow template
+    #     awx.awx.tower_workflow_job_template:
+    #       name: Domain Services Setup 
+    #       state: present
+    #       description: Chain together workflow for provisioning and setting up the Domain Controller
+    #       organization: Default 
+    #       tower_username: "{{ tower_username }}"
+    #       tower_password: "{{ tower_password }}"
+    #       tower_host: https://localhost
+    #       tower_verify_ssl: false
 
-      - name: Add AD Controller Setup to workflow
-        awx.awx.tower_workflow_job_template_node:
-          identifier: ad-controller-setup
-          workflow: Domain Services Setup  
-          unified_job_template: AD Controller Setup 
-          organization: Default 
-          tower_username: "{{ tower_username }}"
-          tower_password: "{{ tower_password }}"
-          tower_host: https://localhost
-          tower_verify_ssl: false
+    #   - name: Add AD Controller Setup to workflow
+    #     awx.awx.tower_workflow_job_template_node:
+    #       identifier: ad-controller-setup
+    #       workflow: Domain Services Setup  
+    #       unified_job_template: AD Controller Setup 
+    #       organization: Default 
+    #       tower_username: "{{ tower_username }}"
+    #       tower_password: "{{ tower_password }}"
+    #       tower_host: https://localhost
+    #       tower_verify_ssl: false
 
-      - name: Add AD Controller provision to workflow
-        awx.awx.tower_workflow_job_template_node:
-          identifier: ad-controller-provision
-          workflow: Domain Services Setup  
-          unified_job_template: AD Controller Provision
-          success_nodes:
-            - ad-controller-setup
-          organization: Default 
-          tower_username: "{{ tower_username }}"
-          tower_password: "{{ tower_password }}"
-          tower_host: https://localhost
-          tower_verify_ssl: false
+    #   - name: Add AD Controller provision to workflow
+    #     awx.awx.tower_workflow_job_template_node:
+    #       identifier: ad-controller-provision
+    #       workflow: Domain Services Setup  
+    #       unified_job_template: AD Controller Provision
+    #       success_nodes:
+    #         - ad-controller-setup
+    #       organization: Default 
+    #       tower_username: "{{ tower_username }}"
+    #       tower_password: "{{ tower_password }}"
+    #       tower_host: https://localhost
+    #       tower_verify_ssl: false
 
-    - name: Create deprovision ec2 instances template
-      awx.awx.tower_job_template:
-        name: "Deprovision All EC2 Instances for Demo"
-        job_type: "run"
-        inventory: "AWS"
-        project: "Windows Ops"
-        playbook: "deprovision.yml"
-        job_tags: "all_ec2"
-        credentials: 
-          - "AWS Console"
-        state: "present"
-        tower_username: "{{ tower_username }}"
-        tower_password: "{{ tower_password }}"
-        tower_host: https://localhost
-        tower_verify_ssl: false
+    # - name: Create deprovision ec2 instances template
+    #   awx.awx.tower_job_template:
+    #     name: "Deprovision All EC2 Instances for Demo"
+    #     job_type: "run"
+    #     inventory: "AWS"
+    #     project: "Windows Ops"
+    #     playbook: "deprovision.yml"
+    #     job_tags: "all_ec2"
+    #     credentials: 
+    #       - "AWS Console"
+    #     state: "present"
+    #     tower_username: "{{ tower_username }}"
+    #     tower_password: "{{ tower_password }}"
+    #     tower_host: https://localhost
+    #     tower_verify_ssl: false
 
-    - name: Create deprovision all AWS Resources template
-      awx.awx.tower_job_template:
-        name: "Deprovision All AWS Resources for Demo"
-        job_type: "run"
-        inventory: "AWS"
-        project: "Windows Ops"
-        playbook: "deprovision.yml"
-        job_tags: "all"
-        credentials: 
-          - "AWS Console"
-        state: "present"
-        tower_username: "{{ tower_username }}"
-        tower_password: "{{ tower_password }}"
-        tower_host: https://localhost
-        tower_verify_ssl: false
+    # - name: Create deprovision all AWS Resources template
+    #   awx.awx.tower_job_template:
+    #     name: "Deprovision All AWS Resources for Demo"
+    #     job_type: "run"
+    #     inventory: "AWS"
+    #     project: "Windows Ops"
+    #     playbook: "deprovision.yml"
+    #     job_tags: "all"
+    #     credentials: 
+    #       - "AWS Console"
+    #     state: "present"
+    #     tower_username: "{{ tower_username }}"
+    #     tower_password: "{{ tower_password }}"
+    #     tower_host: https://localhost
+    #     tower_verify_ssl: false
 
-    - name: Create Provision New Server template
-      awx.awx.tower_job_template:
-        name: "Provision New Server"
-        job_type: "run"
-        inventory: "AWS"
-        project: "Windows Ops"
-        playbook: "provision.yml"
-        credentials: 
-          - "AWS Console"
-          - "Tower Credential"
-        survey_enabled: yes 
-        survey_spec: "{{ lookup('file', 'files/provision-survey.json') }}"
-        state: "present"
-        tower_username: "{{ tower_username }}"
-        tower_password: "{{ tower_password }}"
-        tower_host: https://localhost
-        tower_verify_ssl: false
+    # - name: Create Provision New Server template
+    #   awx.awx.tower_job_template:
+    #     name: "Provision New Server"
+    #     job_type: "run"
+    #     inventory: "AWS"
+    #     project: "Windows Ops"
+    #     playbook: "provision.yml"
+    #     credentials: 
+    #       - "AWS Console"
+    #       - "Tower Credential"
+    #     survey_enabled: yes 
+    #     survey_spec: "{{ lookup('file', 'files/provision-survey.json') }}"
+    #     state: "present"
+    #     tower_username: "{{ tower_username }}"
+    #     tower_password: "{{ tower_password }}"
+    #     tower_host: https://localhost
+    #     tower_verify_ssl: false
 
-    - name: Create deprovision survey list update template 
-      awx.awx.tower_job_template:
-        name: "Update host list for surveys"
-        job_type: "run"
-        inventory: "AWS"
-        project: "Windows Ops"
-        playbook: "update-deprovision-list.yml"
-        credentials: 
-          - "AWS Console"
-          - "Tower Credential"
-        state: "present"
-        tower_username: "{{ tower_username }}"
-        tower_password: "{{ tower_password }}"
-        tower_host: https://localhost
-        tower_verify_ssl: false
+    # - name: Create deprovision survey list update template 
+    #   awx.awx.tower_job_template:
+    #     name: "Update host list for surveys"
+    #     job_type: "run"
+    #     inventory: "AWS"
+    #     project: "Windows Ops"
+    #     playbook: "update-deprovision-list.yml"
+    #     credentials: 
+    #       - "AWS Console"
+    #       - "Tower Credential"
+    #     state: "present"
+    #     tower_username: "{{ tower_username }}"
+    #     tower_password: "{{ tower_password }}"
+    #     tower_host: https://localhost
+    #     tower_verify_ssl: false
