@@ -72,6 +72,12 @@
         tower_host: https://localhost
         tower_verify_ssl: false
 
+    - name: Install boto library for aws 
+      pip:
+        name: boto3 
+        state: present 
+        executable: /usr/bin/pip3.6
+
     - name: Retrieve AWS user ID for instance filters 
       amazon.aws.aws_caller_info:
         aws_access_key: "{{ AWS_ACCESS_KEY_ID }}"
@@ -87,7 +93,7 @@
         description: AWS inventory source 
         inventory: AWS  
         credential: AWS Console  
-        instance_filters: "owner-id: {{ owner.user_id }}"  
+        host_filter: "owner-id: {{ owner.user_id }}"  
         overwrite: True  
         update_on_launch: True  
         source: ec2  
