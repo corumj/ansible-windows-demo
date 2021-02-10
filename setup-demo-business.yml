@@ -17,12 +17,12 @@
     
     - name: Setup AWS EC2 Instance for AD Domain Services
       include_role:
-        name: aws-provision 
+        name: aws-provision-windows
 
     - name: debug and print the ec2 variable from role to see if it's accessible 
       debug:
         msg: "{{ ec2.instances[0].public_ip_address }}"
-        
+
     # - name: Create business domain Tower group 
     #   awx.awx.tower_group: 
     #     name: "{{ business_domain_name }}" 
