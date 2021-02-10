@@ -69,13 +69,9 @@
     - name: Setup Active Directory Domain Services 
       include_role:
         name: windows-ad-controller
-        vars:
-          ansible_password: "{{ win_initial_password }}"
-          ansible_user: Administrator
         apply:
           delegate_to: "{{ ec2.instances[0].public_ip_address }}"
           run_once: true
-
-  # roles:
-  #   - aws-setup
-  #   - aws-provision-windows 
+      vars:
+        ansible_password: "{{ win_initial_password }}"
+        ansible_user: Administrator
