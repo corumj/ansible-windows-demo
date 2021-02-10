@@ -3,7 +3,7 @@
   hosts: localhost
   connection: local
   vars:
-    function: ad_server
+    group_name: ad_server
     ec2_instances: 
       instances: []
   tasks:
@@ -72,6 +72,14 @@
         tower_host: https://localhost
         tower_verify_ssl: false
 
+    - name: Retrieve AWS user ID for instance filters 
+      amazon.aws.aws_caller_info:
+        aws_access_key: "{{ AWS_ACCESS_KEY_ID }}"
+        aws_secret_key: "{{ AWS_SECRET_ACCESS_KEY }}"
+        security_token: "{{ AWS_SECURITY_TOKEN }}"
+        region: "{{ region }}"
+      register: owner
+
     - name: Create AWS Inventory Source
       awx.awx.tower_inventory_source:
         state: present  
@@ -79,7 +87,7 @@
         description: AWS inventory source 
         inventory: AWS  
         credential: AWS Console  
-        # instance_filters: "tag:app={{ app }}"
+        instance_filters: "owner-id: {{ owner.user_id }}"  
         overwrite: True  
         update_on_launch: True  
         source: ec2  
@@ -141,7 +149,7 @@
         inventory: "AWS"
         project: "Windows Ops"
         playbook: "ad-controller-setup.yml"
-        limit: "{{ function }}"
+        limit: "{{ group_name }}"
         credentials: 
           - "AWS Console"
           - "Tower Credential"
@@ -221,30 +229,6 @@
         tower_host: https://localhost
         tower_verify_ssl: false
 
-    # - name: create deprovision survey from template 
-    #   template:
-    #     src: deprovision.json.j2
-    #     dest: files/deprovision.json
-
-    # - name: Create deprovision single EC2 Instance
-    #   awx.awx.tower_job_template:
-    #     name: "Deprovision Specific EC2 Instance"
-    #     job_type: "run"
-    #     inventory: "AWS"
-    #     project: "Windows Ops"
-    #     playbook: "deprovision.yml"
-    #     job_tags: "single"
-    #     credentials: 
-    #       - "AWS Console"
-    #       - "Tower Credential"
-    #     survey_enabled: yes 
-    #     survey_spec: "{{ lookup('file', 'files/deprovision.json') }}"
-    #     state: "present"
-    #     tower_username: "{{ tower_username }}"
-    #     tower_password: "{{ tower_password }}"
-    #     tower_host: https://localhost
-    #     tower_verify_ssl: false
-
     - name: Create Provision New Server template
       awx.awx.tower_job_template:
         name: "Provision New Server"
@@ -263,23 +247,6 @@
         tower_host: https://localhost
         tower_verify_ssl: false
 
-    # - name: Create Join server to domain template
-    #   awx.awx.tower_job_template:
-    #     name: "Join Domain"
-    #     job_type: "run"
-    #     inventory: "AWS"
-    #     project: "Windows Ops"
-    #     playbook: "join-domain.yml"
-    #     credentials: 
-    #       - "AWS Console"
-    #       - "AWS Windows Machine"
-    #       - "Tower Credential"
-    #     state: "present"
-    #     tower_username: "{{ tower_username }}"
-    #     tower_password: "{{ tower_password }}"
-    #     tower_host: https://localhost
-    #     tower_verify_ssl: false
-
     - name: Create deprovision survey list update template 
       awx.awx.tower_job_template:
         name: "Update host list for surveys"
@@ -295,48 +262,3 @@
         tower_password: "{{ tower_password }}"
         tower_host: https://localhost
         tower_verify_ssl: false
-
-    # - name: Schedule update of survey host list 
-    #   awx.awx.tower_schedule:
-    #     name: "Update deprovision survey list"
-    #     state: present 
-    #     unified_job_template: "Update deprovision survey list"
-    #     rrule: "DTSTART:20191219T130551Z RRULE:FREQ=MINUTELY;INTERVAL=5"
-    #     tower_username: "{{ tower_username }}"
-    #     tower_password: "{{ tower_password }}"
-    #     tower_host: https://localhost
-    #     tower_verify_ssl: false
-
-#     - name: Create Windows Update job template
-#       awx.awx.tower_job_template:
-#         name: "Windows Updates"
-#         job_type: run
-#         inventory: AWS
-#         project: "Windows Ops"
-#         playbook: windows-updates.yml
-#         credentials:
-#           - "AWS Windows Machine"
-#         limit: "tag_app_{{ app }}"
-#         state: present
-#         survey_enabled: yes
-#         survey_spec: "{{ lookup('file', 'windows_update_survey.json') }}"
-#         tower_username: "{{ tower_username }}"
-#         tower_password: "{{ tower_password }}"
-#         tower_host: https://localhost
-#         tower_verify_ssl: false
-
-#     - name: Create Domain Controller job template
-#       awx.awx.tower_job_template:
-#         name: "Create Domain Controller"
-#         job_type: run 
-#         inventory: AWS   
-#         project: Windows Ops  
-#         playbook: windows-ad-controller.yml  
-#         credentials:
-#           - "AWS Windows Machine"
-#         limit: tag_function_ad_server
-#         state: present 
-#         tower_username: "{{ tower_username }}"
-#         tower_password: "{{ tower_password }}"
-#         tower_host: https://localhost
-#         tower_verify_ssl: false        

@@ -2,8 +2,17 @@
 - name: Provision a Windows Instance 
   hosts: localhost 
   connection: local 
-  vars:
-    function: "{{ serverFunction }}"
-    ec2_instance_name: "{{ instance_name }}"
-  roles:
-    - aws-provision
+  vars: 
+    group_name: "{{ survey_group_name | default('default') }}"
+    short_desc: "{{ survey_short_desc | default('demo') }}"
+    server_env: "{{ survey_server_env | default('test') }}" 
+    server_os: "{{ survey_server_os | default('windows') }}"
+    business_domain_name: "{{ survey_business_domain_name | default('demo') }}"
+  tasks:
+    - name: Provision Windows Server
+      include_role: aws-provision-windows 
+      when: server_os == windows 
+
+    - name: Provision Linux Server 
+      include_role: aws-provision-linux 
+      when: server_os == linux

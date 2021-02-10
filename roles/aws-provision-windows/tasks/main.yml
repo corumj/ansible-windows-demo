@@ -32,15 +32,18 @@
         state: present
         aws_access_key: "{{ lookup('env', 'AWS_ACCESS_KEY_ID') }}"
         aws_secret_key: "{{ lookup('env', 'AWS_SECRET_ACCESS_KEY') }}"
-        name: "ansible-{{ ec2_instance_name }}-{{ name }}"
+        name: "{{ server_name }}"
         security_group: "{{ sec_info.security_groups[0].group_name }}"
         vpc_subnet_id: "{{ vpc_subnet_info.subnets[0].subnet_id }}"
         image_id: "{{ aws_ami }}"
         instance_type: "{{ aws_instance_type }}"
         region: "{{ region }}"
         tags: 
-          app: "{{ app }}"
-          function: "{{ function }}"
+          group_name: "{{ group_name }}"
+          short_desc: "{{ short_desc }}"
+          server_env: "{{ server_env }}" 
+          server_os: "{{ server_os }}"
+          business_domain_name: "{{ business_domain_name }}"
         user_data: "{{ lookup('template', 'userdata.txt.j2') }}"
         wait: yes
       register: ec2 
@@ -67,8 +70,10 @@
         tower_host: https://localhost
         tower_verify_ssl: false
       loop:
-        - windows 
-        - "{{ function }}"
+        - "{{ server_os }}" 
+        - "{{ group_name }}"
+        - "{{ server_env }}"
+        - "{{ business_domain_name }}"
 
     - name: Update deprovision list 
       include_role:

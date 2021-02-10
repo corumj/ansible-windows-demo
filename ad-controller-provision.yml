@@ -4,8 +4,11 @@
   connection: local 
   gather_facts: false
   vars: 
-    function: ad_server
-    ec2_instance_name: ActiveDirectory
+    group_name: ad_server
+    short_desc: ActiveDirectory
+    server_env: prod 
+    server_os: windows
+    business_domain_name: "{{ survey_business_domain_name }}"
   roles:
     - aws-setup
-    - aws-provision 
+    - aws-provision-windows 
