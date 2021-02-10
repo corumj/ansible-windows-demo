@@ -18,6 +18,7 @@
       awx.awx.tower_project:
         name: Windows Ops
         state: present
+        wait: yes
         organization: Default 
         tower_username: "{{ tower_username }}"
         tower_password: "{{ tower_password }}"
