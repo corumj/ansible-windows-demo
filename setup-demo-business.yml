@@ -68,6 +68,4 @@
     - name: Setup Active Directory Domain Services 
       import_role:
         name: windows-ad-controller
-      become: yes
-      become_user: Administrator
       delegate_to: "{{ ad.instances[0].public_ip_address }}"
