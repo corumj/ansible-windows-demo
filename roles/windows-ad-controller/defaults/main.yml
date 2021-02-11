@@ -6,4 +6,5 @@
 # Users and Password to Create
 users_password: "Ansible!1"        # MUST FOLLOW WINDOWS AD PASSWORD RULES
 users:
-  - "{{ name }}"  # will pull your name from group_vars/all.yml for consistency
+  - "user1"
+  - "user2"
