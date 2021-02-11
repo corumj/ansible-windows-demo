@@ -66,11 +66,9 @@
         tower_verify_ssl: false
 
     - name: Setup Active Directory Domain Services 
-      include_role:
+      import_role:
         name: windows-ad-controller
-        apply:
-          delegate_to: "{{ ad.instances[0].public_ip_address }}"
-          run_once: true
-          vars:
-            ansible_password: "{{ win_initial_password }}"
-            ansible_user: Administrator
+      vars:
+        ansible_password: "{{ win_initial_password }}"
+        ansible_user: Administrator
+      delegate_to: "{{ ad.instances[0].public_ip_address }}"
