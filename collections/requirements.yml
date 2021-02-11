@@ -5,3 +5,4 @@ collections:
   - community.windows
   - amazon.aws
   - awx.awx
+  - ansible.tower
