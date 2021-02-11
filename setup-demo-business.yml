@@ -22,7 +22,7 @@
     - name: Refresh Inventory 
       meta: refresh_inventory
 
-    - name: Check if domain server instance already exist
+    - name: pull domain server instance info for setting up ADDS
       community.aws.ec2_instance_info:
         region: "{{ region }}"
         aws_access_key: "{{ lookup('env', 'AWS_ACCESS_KEY_ID') }}"
@@ -65,12 +65,21 @@
         tower_host: https://localhost
         tower_verify_ssl: false
 
-    - name: Setup Active Directory Domain Services 
-      include_role:
-        name: windows-ad-controller
-        apply:
-          delegate_to: "{{ ad.instances[0].public_ip_address }}"
-          run_once: true
-      vars:
-        ansible_password: "{{ win_initial_password }}"
-        ansible_user: Administrator
+- name: Setup Active Directory Domain Services
+  hosts: "{{ ad.instances[0].public_ip_address }}"
+  vars:
+    ansible_password: "{{ win_initial_password }}"
+    ansible_user: Administrator
+  roles:
+    - windows-ad-controller
+
+
+    # - name: Setup Active Directory Domain Services 
+    #   include_role:
+    #     name: windows-ad-controller
+    #     apply:
+    #       delegate_to: "{{ ad.instances[0].public_ip_address }}"
+    #       run_once: true
+    #   vars:
+    #     ansible_password: "{{ win_initial_password }}"
+    #     ansible_user: Administrator
