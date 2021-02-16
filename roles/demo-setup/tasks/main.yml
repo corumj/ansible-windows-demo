@@ -9,7 +9,7 @@
     credentials: 
       - "AWS Windows Machine"
     state: "present"
-    tower_username: "{{ tower_username }}"
-    tower_password: "{{ tower_password }}"
+    tower_username: "{{ lookup('env', 'TOWER_USERNAME') }}"
+    tower_password: "{{ lookup('env', 'TOWER_PASSWORD') }}"
     tower_host: https://localhost
     tower_verify_ssl: false
