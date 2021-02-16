@@ -1,7 +1,0 @@
----
-- name: Setup AWS demo infrastructure
-  hosts: localhost 
-  connection: local 
-  gather_facts: false
-  roles:
-    - aws-setup

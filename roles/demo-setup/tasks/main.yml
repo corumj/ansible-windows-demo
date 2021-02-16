@@ -13,3 +13,20 @@
     tower_password: "{{ lookup('env', 'TOWER_PASSWORD') }}"
     tower_host: https://localhost
     tower_verify_ssl: false
+
+- name: Create Provisioning Template
+  awx.awx.tower_job_template:
+    name: "3. Simple Self Service Provisioning"
+    job_type: "run"
+    inventory: "AWS"
+    project: "Windows Ops"
+    playbook: "provision.yml"
+    credentials: 
+      - "AWS Console"
+    state: "present"
+    survey_enabled: yes 
+    survey_spec: "{{ lookup('file', 'files/provision-survey.json') }}"
+    tower_username: "{{ lookup('env', 'TOWER_USERNAME') }}"
+    tower_password: "{{ lookup('env', 'TOWER_PASSWORD') }}"
+    tower_host: https://localhost
+    tower_verify_ssl: false
