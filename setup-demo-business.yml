@@ -65,7 +65,31 @@
         tower_host: https://localhost
         tower_verify_ssl: false
 
-    - name: Setup Active Directory Domain Services 
+    - name: Setup Demo Templates 
       import_role:
-        name: windows-ad-controller
-      delegate_to: "{{ ad.instances[0].public_ip_address }}"
+        name: demo-setup 
+    
+    - name: Setup AD Controller 
+      awx.awx.tower_job_launch:
+        job_template: "2. Setup AD Controller (will auto run after creating business)"
+        tower_username: "{{ lookup('env', 'TOWER_USERNAME') }}"
+        tower_password: "{{ lookup('env', 'TOWER_PASSWORD') }}"
+        tower_host: https://localhost
+        tower_verify_ssl: false
+      register: job 
+
+    - name: Wait for AD Controller setup to complete 
+      awx.awx.tower_job_wait:
+        job_id: "{{ job.id }}"
+        timeout: 120 
+        tower_username: "{{ lookup('env', 'TOWER_USERNAME') }}"
+        tower_password: "{{ lookup('env', 'TOWER_PASSWORD') }}"
+        tower_host: https://localhost
+        tower_verify_ssl: false
+        
+      
+
+    # - name: Setup Active Directory Domain Services 
+    #   import_role:
+    #     name: windows-ad-controller
+    #   delegate_to: "{{ ad.instances[0].public_ip_address }}"

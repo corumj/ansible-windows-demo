@@ -1,6 +1,6 @@
 ---
 - name: Create Domain Controller and Domain
-  hosts: all
+  hosts: ad_server
   gather_facts: false
   roles:
     - windows-ad-controller

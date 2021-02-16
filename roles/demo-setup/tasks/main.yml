@@ -1,0 +1,15 @@
+---
+- name: Create Setup AD Controller Template
+  awx.awx.tower_job_template:
+    name: "2. Setup AD Controller (will auto run after creating business)"
+    job_type: "run"
+    inventory: "AWS"
+    project: "Windows Ops"
+    playbook: "ad-controller-setup.yml"
+    credentials: 
+      - "AWS Windows Machine"
+    state: "present"
+    tower_username: "{{ tower_username }}"
+    tower_password: "{{ tower_password }}"
+    tower_host: https://localhost
+    tower_verify_ssl: false
