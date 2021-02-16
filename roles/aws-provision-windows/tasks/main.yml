@@ -66,9 +66,9 @@
         - "{{ server_env }}"
         - "{{ business_domain_name }}"
 
-    - name: Update deprovision list 
-      include_role:
-        name: server-list
+    # - name: Update deprovision list 
+    #   include_role:
+    #     name: server-list
 
     - name: Wait for WinRM to answer on all hosts 
       wait_for:
