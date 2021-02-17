@@ -10,9 +10,11 @@
     business_domain_name: "{{ hostvars[groups['ad_server'][0]]['tags']['business_domain_name'] }}"
   tasks:
     - name: Provision Windows Server
-      include_role: aws-provision-windows 
+      include_role: 
+        name: aws-provision-windows 
       when: server_os == windows 
 
     - name: Provision Linux Server 
-      include_role: aws-provision-linux 
+      include_role: 
+        name: aws-provision-linux 
       when: server_os == linux
