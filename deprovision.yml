@@ -1,9 +1,9 @@
 ---
-- name: Begin Deprovisioning
+- name: Deprovision Demo
   hosts: localhost
   connection: local
   vars:
-    ec2_instance_name: "{{ instance_name }}"
+    business_domain_name: "{{ hostvars[groups['ad_server'][0]]['tags']['business_domain_name'] }}"
   gather_facts: false
   roles:
     - aws-deprovision 
