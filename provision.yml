@@ -9,10 +9,14 @@
     server_os: "{{ survey_server_os | default('windows') }}"
     business_domain_name: "{{ survey_business_domain_name | default('demo') }}"
   tasks:
-    - name: Provision Windows Server
-      include_role: aws-provision-windows 
-      when: server_os == windows 
+    - name: Retrieve business domain name from AD Controller
+      debug:
+        msg: "{{ hostvars[groups['ad_server'][0]]['tags']['business_domain_name']}}"
 
-    - name: Provision Linux Server 
-      include_role: aws-provision-linux 
-      when: server_os == linux
+    # - name: Provision Windows Server
+    #   include_role: aws-provision-windows 
+    #   when: server_os == windows 
+
+    # - name: Provision Linux Server 
+    #   include_role: aws-provision-linux 
+    #   when: server_os == linux
