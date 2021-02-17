@@ -7,16 +7,12 @@
     short_desc: "{{ survey_short_desc | default('demo') }}"
     server_env: "{{ survey_server_env | default('test') }}" 
     server_os: "{{ survey_server_os | default('windows') }}"
-    business_domain_name: "{{ survey_business_domain_name | default('demo') }}"
+    business_domain_name: "{{ hostvars[groups['ad_server'][0]]['tags']['business_domain_name'] }}"
   tasks:
-    - name: Retrieve business domain name from AD Controller
-      debug:
-        msg: "{{ hostvars[groups['ad_server'][0]]['tags']['business_domain_name']}}"
+    - name: Provision Windows Server
+      include_role: aws-provision-windows 
+      when: server_os == windows 
 
-    # - name: Provision Windows Server
-    #   include_role: aws-provision-windows 
-    #   when: server_os == windows 
-
-    # - name: Provision Linux Server 
-    #   include_role: aws-provision-linux 
-    #   when: server_os == linux
+    - name: Provision Linux Server 
+      include_role: aws-provision-linux 
+      when: server_os == linux
