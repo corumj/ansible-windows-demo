@@ -32,21 +32,21 @@
     tower_host: https://localhost
     tower_verify_ssl: false
 
-- name: Remove deprovisioning Template
-  awx.awx.tower_job_template:
-    name: "4. Deprovision Demo"
-    job_type: "run"
-    inventory: "AWS"
-    project: "Windows Ops"
-    playbook: "deprovision.yml"
-    credentials: 
-      - "AWS Console"
-      - "Tower Credential"
-    state: "absent"
-    tower_username: "{{ lookup('env', 'TOWER_USERNAME') }}"
-    tower_password: "{{ lookup('env', 'TOWER_PASSWORD') }}"
-    tower_host: https://localhost
-    tower_verify_ssl: false
+# - name: Remove deprovisioning Template
+#   awx.awx.tower_job_template:
+#     name: "4. Deprovision Demo"
+#     job_type: "run"
+#     inventory: "AWS"
+#     project: "Windows Ops"
+#     playbook: "deprovision.yml"
+#     credentials: 
+#       - "AWS Console"
+#       - "Tower Credential"
+#     state: "absent"
+#     tower_username: "{{ lookup('env', 'TOWER_USERNAME') }}"
+#     tower_password: "{{ lookup('env', 'TOWER_PASSWORD') }}"
+#     tower_host: https://localhost
+#     tower_verify_ssl: false
 
 - name: Remove business domain group in Tower
   awx.awx.tower_group: 
