@@ -69,7 +69,7 @@
       import_role:
         name: demo-setup 
     
-    - name: Setup AD Controller 
+    - name: Start setup for AD Controller 
       awx.awx.tower_job_launch:
         job_template: "2. Setup AD Controller (will auto run after creating business)"
         tower_username: "{{ lookup('env', 'TOWER_USERNAME') }}"
@@ -81,7 +81,7 @@
     - name: Wait for AD Controller setup to complete 
       awx.awx.tower_job_wait:
         job_id: "{{ job.id }}"
-        timeout: 600
+        timeout: 1200
         tower_username: "{{ lookup('env', 'TOWER_USERNAME') }}"
         tower_password: "{{ lookup('env', 'TOWER_PASSWORD') }}"
         tower_host: https://localhost
