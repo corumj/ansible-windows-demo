@@ -5,5 +5,12 @@
   vars:
     business_domain_name: "{{ hostvars[groups['ad_server'][0]]['tags']['business_domain_name'] }}"
   gather_facts: false
-  roles:
-    - aws-deprovision 
+  tasks:
+    - name: Deprovision AWS Stuff 
+      include_role:
+        name: aws-deprovision 
+
+    - name: Reset Tower 
+      include_role:
+        name: demo-setup 
+        tasks_from: reset-tower.yml
