@@ -12,9 +12,9 @@
     - name: Provision Windows Server
       include_role: 
         name: aws-provision-windows 
-      when: server_os == windows 
+      when: server_os == 'windows' 
 
     - name: Provision Linux Server 
       include_role: 
         name: aws-provision-linux 
-      when: server_os == linux
+      when: server_os == 'linux'
