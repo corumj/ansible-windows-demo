@@ -92,6 +92,8 @@
     - name: Setup Ansible Tower LDAP 
       include_role:
         name: tower-ldap 
+      vars:
+        ad_server_ip: "{{ ad.instances[0].public_ip_address }}"
        
       
 
