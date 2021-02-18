@@ -8,6 +8,7 @@
     playbook: "ad-controller-setup.yml"
     credentials: 
       - "AWS Windows Machine"
+    ask_variables_on_launch: yes
     state: "present"
     tower_username: "{{ lookup('env', 'TOWER_USERNAME') }}"
     tower_password: "{{ lookup('env', 'TOWER_PASSWORD') }}"
