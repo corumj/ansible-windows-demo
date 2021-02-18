@@ -29,6 +29,7 @@
         aws_secret_key: "{{ lookup('env', 'AWS_SECRET_ACCESS_KEY') }}"
         filters:
           "tag:group_name": ad_server
+          "tag:business_domain_name": "{{ business_domain_name }}"
           instance-state-name: ["running"]
       register: ad
 
