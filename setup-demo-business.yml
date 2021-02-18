@@ -87,6 +87,9 @@
         tower_host: https://localhost
         tower_verify_ssl: false
         
+    - name: Setup Ansible Tower LDAP 
+      include_role:
+        name: tower-ldap 
       
 
     # - name: Setup Active Directory Domain Services 

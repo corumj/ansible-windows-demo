@@ -1,0 +1,54 @@
+---
+- name: Set all the LDAP Auth Bind Params
+  tower_settings:
+    settings:
+      AUTH_LDAP_SERVER_URI: "ldap://{{ }}"
+      AUTH_LDAP_BIND_DN: "admin@{{ business_domain_name }}"
+      AUTH_LDAP_BIND_PASSWORD: "{{ win_initial_password }}"
+      AUTH_LDAP_USER_SEARCH: 
+        - "DC={{ business_domain_name }},DC=lab",
+        - "SCOPE_SUBTREE",
+        - "(sAMAccountName=%(user)s)"
+      AUTH_LDAP_USER_ATTR_MAP:
+        email: "mail"
+        first_name: "givenName"
+        last_name: "sn"
+      AUTH_LDAP_GROUP_SEARCH:
+        - "DC={{ business_domain_name }},DC=lab",
+        - "SCOPE_SUBTREE",
+        - "(objectClass=group)"          
+      AUTH_LDAP_GROUP_TYPE: "ActiveDirectoryGroupType"
+      AUTH_LDAP_USER_FLAGS_BY_GROUP:
+        is_superuser:
+          - "CN=tower_lab_admins,OU=Groups,DC={{ business_domain_name }},DC=lab"
+        is_system_auditor:
+          - "CN=tower_lab_auditors,OU=Groups,DC={{ business_domain_name }},DC=lab"  
+      AUTH_LDAP_ORGANIZATION_MAP:
+        "LDAP Lab":
+            remove_admins: true
+            users:
+            - "CN=tower_lab_auditors,OU=Groups,DC={{ business_domain_name }},DC=lab"
+            - "CN=tower_lab_users,OU=Groups,DC={{ business_domain_name }},DC=lab"
+            - "CN=tower_lab_team_helpdesk,OU=Groups,DC={{ business_domain_name }},DC=lab"
+            admins: "CN=tower_lab_admins,OU=Groups,DC={{ business_domain_name }},DC=lab"
+      AUTH_LDAP_TEAM_MAP:
+        "LDAP Lab Admins":
+          remove: true
+          organization: LDAP Lab
+          users: CN=tower_lab_admins,OU=Groups,DC={{ business_domain_name }},DC=lab
+        "LDAP Lab Auditors":
+          remove: true
+          organization: LDAP Lab
+          users: CN=tower_lab_auditors,OU=Groups,DC={{ business_domain_name }},DC=lab
+        "LDAP Lab Users":
+          remove: true
+          organization: LDAP Lab
+          users: CN=tower_lab_users,OU=Groups,DC={{ business_domain_name }},DC=lab
+        "LDAP Lab HelpDesk":
+          remove: true
+          organization: LDAP Lab
+          users: CN=tower_lab_team_helpdesk,OU=Groups,DC={{ business_domain_name }},DC=lab
+    tower_username: "{{ lookup('env', 'TOWER_USERNAME') }}"
+    tower_password: "{{ lookup('env', 'TOWER_PASSWORD') }}"
+    tower_host: https://localhost
+    tower_verify_ssl: false
