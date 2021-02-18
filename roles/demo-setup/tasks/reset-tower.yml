@@ -52,11 +52,11 @@
   awx.awx.tower_group: 
     name: "{{ business_domain_name }}" 
     inventory: AWS  
-    hosts:
-      - "{{ ad.instances[0].public_ip_address }}"  
-    variables:
-      business_domain_name: "{{ survey_business_domain_name }}"   
-      win_initial_password: "{{ survey_win_initial_password }}"
+    # hosts:
+    #   - "{{ ad.instances[0].public_ip_address }}"  
+    # variables:
+    #   business_domain_name: "{{ survey_business_domain_name }}"   
+    #   win_initial_password: "{{ survey_win_initial_password }}"
     state: absent 
     tower_username: "{{ lookup('env', 'TOWER_USERNAME') }}"
     tower_password: "{{ lookup('env', 'TOWER_PASSWORD') }}"
