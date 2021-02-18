@@ -1,6 +1,6 @@
 ---
 - name: Set all the LDAP Auth Bind Params
-  tower_settings:
+  awx.awx.tower_settings:
     settings:
       AUTH_LDAP_SERVER_URI: "ldap://{{ hostvars[groups['ad_server'][0]]['ec2_ip_address'] }}"
       AUTH_LDAP_BIND_DN: "admin@{{ business_domain_name }}"
