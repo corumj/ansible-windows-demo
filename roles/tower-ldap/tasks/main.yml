@@ -3,7 +3,7 @@
   awx.awx.tower_settings:
     settings:
       AUTH_LDAP_SERVER_URI: "ldap://{{ ad_server_ip }}"
-      AUTH_LDAP_BIND_DN: "admin@{{ business_domain_name }}.lab"
+      AUTH_LDAP_BIND_DN: "ansibleadmin@{{ business_domain_name }}.lab"
       AUTH_LDAP_BIND_PASSWORD: "{{ win_initial_password }}"
       AUTH_LDAP_USER_SEARCH: 
         - "DC={{ business_domain_name }},DC=lab"
