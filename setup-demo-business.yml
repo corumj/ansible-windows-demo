@@ -72,6 +72,8 @@
     - name: Start setup for AD Controller 
       awx.awx.tower_job_launch:
         job_template: "2. Setup AD Controller (will auto run after creating business)"
+        extra_vars:
+          domain_name: "{{ business_domain_name }}.lab" 
         tower_username: "{{ lookup('env', 'TOWER_USERNAME') }}"
         tower_password: "{{ lookup('env', 'TOWER_PASSWORD') }}"
         tower_host: https://localhost
@@ -90,8 +92,7 @@
     - name: Setup Ansible Tower LDAP 
       include_role:
         name: tower-ldap 
-      vars:
-        domain_name: "{{ business_domain_name }}.lab"  
+       
       
 
     # - name: Setup Active Directory Domain Services 
