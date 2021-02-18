@@ -9,7 +9,6 @@
     server_env: test 
     server_os: windows
     business_domain_name: "{{ survey_business_domain_name }}"
-    domain_name: "{{ business_domain_name }}.lab"
     win_initial_password: "{{ survey_win_initial_password }}"
   tasks:
     - name: Setup AWS infrastructure 
@@ -91,6 +90,8 @@
     - name: Setup Ansible Tower LDAP 
       include_role:
         name: tower-ldap 
+      vars:
+        domain_name: "{{ business_domain_name }}.lab"  
       
 
     # - name: Setup Active Directory Domain Services 
