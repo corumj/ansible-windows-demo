@@ -4,7 +4,11 @@
 # domain_admin_password: "Ansible!!1"
 
 # Users and Password to Create
-users_password: "Ansible!1"        # MUST FOLLOW WINDOWS AD PASSWORD RULES
+users_password: "Redhat1!"        # MUST FOLLOW WINDOWS AD PASSWORD RULES
 users:
-  - "user1"
-  - "user2"
+  - { name: BSmith, firstname: Bob, surname: Smith, adgroup: tower_lab_admins }
+  - { name: QColdwater, firstname: Quentin, surname: Coldwater, adgroup: tower_lab_admins }
+  - { name: AQuinn, firstname: Alice, surname: Quinn, adgroup: tower_lab_auditors }
+  - { name: EWaugh, firstname: Eliot, surname: Waugh, adgroup: tower_lab_users }
+  - { name: MHanson, firstname: Margo, surname: Hanson, adgroup: tower_lab_users }
+  - { name: JWicker, firstname: Julia, surname: Wicker, adgroup: tower_lab_team_helpdesk }

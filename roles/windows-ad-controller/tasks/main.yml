@@ -82,47 +82,6 @@
   when: "reverse_dns_zone_name not in dnsserverzone.stdout"
   until: dnszone is succeeded 
 
-- name: Add windows groups
-  win_domain_group:
-    name: Ansible Users 
-    scope: global 
-
-- name: Add Windows domain admin 
-  win_domain_user:
-    name: "Admin"
-    upn: "Admin@{{ domain_name }}"
-    state: present 
-    enabled: yes 
-    account_locked: no 
-    groups:
-      - Domain Admins 
-    password: "{{ win_initial_password }}"
-    update_password: on_create 
-    password_expired: false 
-    firstname: admin 
-    surname: user 
-    company: Red Hat 
-    email: "Admin@{{ domain_name }}"
-
-- name: Add windows AD users 
-  win_domain_user:
-    name: "{{ item }}"
-    upn: "{{ item }}@{{ domain_name }}"
-    state: present
-    enabled: yes
-    account_locked: no
-    groups:
-      - Ansible Users
-    password: "{{ users_password }}"
-    update_password: on_create
-    password_expired: false
-    firstname: user
-    surname: user
-    company: Red Hat
-    email: "{{ item }}@{{ domain_name }}"
-  with_items:
-    - "{{ users }}"
-
 # This section will create our OU and uses DSC
 - name: Install latest nuget (required for DSC Resource Kit)
   win_shell: install-packageprovider -name nuget -force
@@ -143,3 +102,77 @@
     resource_name: ADOrganizationalUnit
     name: "Ansible"
     path: "OU=Servers,DC=demo,DC=lab"
+
+- name: Add Groups OU 
+  win_dsc:
+    resource_name: ADOrganizationalUnit
+    name: "Groups"
+    path: "DC=demo,DC=lab"
+
+- name: Add windows groups
+  win_domain_group:
+    name: "{{ item }}"
+    scope: global 
+    path: "OU=Groups,DC=demo,DC=lab"
+  loop:
+    - tower_lab_admins
+    - tower_lab_auditors
+    - tower_lab_team_helpdesk
+    - tower_lab_users
+
+- name: Add Windows domain admin 
+  win_domain_user:
+    name: "Admin"
+    upn: "Admin@{{ domain_name }}"
+    state: present 
+    enabled: yes 
+    account_locked: no 
+    groups:
+      - Domain Admins 
+    password: "{{ win_initial_password }}"
+    update_password: on_create 
+    password_expired: false 
+    firstname: admin 
+    surname: user 
+    company: Red Hat 
+    email: "Admin@{{ domain_name }}"
+
+- name: Add windows AD users 
+  win_domain_user:
+    name: "{{ item.name }}"
+    upn: "{{ item.name }}@{{ domain_name }}"
+    state: present
+    enabled: yes
+    account_locked: no
+    groups:
+      - "{{ item.adgroup }}"
+    password: "{{ users_password }}"
+    update_password: on_create
+    password_expired: false
+    firstname: "{{ item.firstname }}"
+    surname: "{{ item.surname }}"
+    company: Red Hat
+    email: "{{ item.name }}@{{ domain_name }}"
+  with_items:
+    - "{{ users }}"
+
+# This section will create our OU and uses DSC
+# - name: Install latest nuget (required for DSC Resource Kit)
+#   win_shell: install-packageprovider -name nuget -force
+
+# - name: Install xActiveDirectory PS Module 
+#   win_psmodule:
+#     name: ActiveDirectoryDSC
+#     state: present 
+
+# - name: Create a Server OU 
+#   win_dsc:
+#     resource_name: ADOrganizationalUnit
+#     name: "Servers"
+#     path: "DC=demo,DC=lab"
+
+# - name: Create an Ansible OU 
+#   win_dsc:
+#     resource_name: ADOrganizationalUnit
+#     name: "Ansible"
+#     path: "OU=Servers,DC=demo,DC=lab"
