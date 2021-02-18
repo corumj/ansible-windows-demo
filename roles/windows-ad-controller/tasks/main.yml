@@ -122,8 +122,8 @@
 
 - name: Add Windows domain admin 
   win_domain_user:
-    name: "Admin"
-    upn: "Admin@{{ domain_name }}.lab"
+    name: "ansibleadmin"
+    upn: "ansibleadmin@{{ domain_name }}.lab"
     state: present 
     enabled: yes 
     account_locked: no 
@@ -132,10 +132,10 @@
     password: "{{ win_initial_password }}"
     update_password: on_create 
     password_expired: false 
-    firstname: admin 
+    firstname: ansibleadmin 
     surname: user 
     company: Red Hat 
-    email: "Admin@{{ domain_name }}.lab"
+    email: "ansibleadmin@{{ domain_name }}.lab"
 
 - name: Add windows AD users 
   win_domain_user:
