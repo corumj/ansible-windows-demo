@@ -73,7 +73,7 @@
       awx.awx.tower_job_launch:
         job_template: "2. Setup AD Controller (will auto run after creating business)"
         extra_vars:
-          domain_name: "{{ business_domain_name }}.lab" 
+          domain_name: "{{ business_domain_name }}" 
         tower_username: "{{ lookup('env', 'TOWER_USERNAME') }}"
         tower_password: "{{ lookup('env', 'TOWER_PASSWORD') }}"
         tower_host: https://localhost

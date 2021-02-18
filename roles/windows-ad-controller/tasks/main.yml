@@ -49,7 +49,7 @@
 
 - name: Create Domain 
   ansible.windows.win_domain:
-    dns_domain_name: '{{ domain_name }}'
+    dns_domain_name: '{{ domain_name }}.lab'
     safe_mode_password: '{{ recovery_password }}'
   register: domain 
 
@@ -95,25 +95,25 @@
   win_dsc:
     resource_name: ADOrganizationalUnit
     name: "Servers"
-    path: "DC=demo,DC=lab"
+    path: "DC={{ domain_name }},DC=lab"
 
 - name: Create an Ansible OU 
   win_dsc:
     resource_name: ADOrganizationalUnit
     name: "Ansible"
-    path: "OU=Servers,DC=demo,DC=lab"
+    path: "OU=Servers,DC={{ domain_name }},DC=lab"
 
 - name: Add Groups OU 
   win_dsc:
     resource_name: ADOrganizationalUnit
     name: "Groups"
-    path: "DC=demo,DC=lab"
+    path: "DC={{ domain_name }},DC=lab"
 
 - name: Add windows groups
   win_domain_group:
     name: "{{ item }}"
     scope: global 
-    path: "OU=Groups,DC=demo,DC=lab"
+    path: "OU=Groups,DC={{ domain_name }},DC=lab"
   loop:
     - tower_lab_admins
     - tower_lab_auditors
@@ -123,7 +123,7 @@
 - name: Add Windows domain admin 
   win_domain_user:
     name: "Admin"
-    upn: "Admin@{{ domain_name }}"
+    upn: "Admin@{{ domain_name }}.lab"
     state: present 
     enabled: yes 
     account_locked: no 
@@ -135,12 +135,12 @@
     firstname: admin 
     surname: user 
     company: Red Hat 
-    email: "Admin@{{ domain_name }}"
+    email: "Admin@{{ domain_name }}.lab"
 
 - name: Add windows AD users 
   win_domain_user:
     name: "{{ item.name }}"
-    upn: "{{ item.name }}@{{ domain_name }}"
+    upn: "{{ item.name }}@{{ domain_name }}.lab"
     state: present
     enabled: yes
     account_locked: no
@@ -152,7 +152,7 @@
     firstname: "{{ item.firstname }}"
     surname: "{{ item.surname }}"
     company: Red Hat
-    email: "{{ item.name }}@{{ domain_name }}"
+    email: "{{ item.name }}@{{ domain_name }}.lab"
   with_items:
     - "{{ users }}"
 
