@@ -2,4 +2,4 @@
 - name: Simple hardening of GPO with Ansible 
   hosts: all 
   roles:
-    - dev-sec.windows-hardening
+    - windows-hardening
