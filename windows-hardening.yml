@@ -1,5 +1,5 @@
 --- 
-- name: Simple hardening of GPO with Ansible 
+- name: Simple windows with Ansible 
   hosts: all 
   roles:
     - windows-hardening
