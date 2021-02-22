@@ -36,12 +36,6 @@
           - 80 
           - 5986 # WinRM
           - 3389 # RDP
-          - 389 # LDAP (external to hook up with Tower)
-          - 3268 # LDAP GC (external to hook up with Tower)
-        cidr_ip: 0.0.0.0/0
-      - proto: udp 
-        ports:
-          - 389 # LDAP (external to hook up with Tower)
         cidr_ip: 0.0.0.0/0
       - proto: icmp
         to_port: -1
