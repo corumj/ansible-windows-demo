@@ -57,12 +57,13 @@
 
         - name: Create Windows - 2. Setup AD Controller template
           awx.awx.tower_job_template:
-            name: "Windows - 2. Setup AD Controller template"
+            name: "Windows - 2. Setup AD Controller template (auto runs after init)"
             job_type: "run"
             inventory: AWS
             project: Windows
             playbook: "ad-controller-setup.yml"
             organization: Default 
+            limit: tag_ad_server
             credentials: 
               - "Tower Credential"
               - "AWS"
@@ -74,3 +75,19 @@
             tower_password: "{{ lookup('env', 'TOWER_PASSWORD') }}"
             tower_host: "{{ lookup('env', 'TOWER_HOST') }}"
             tower_verify_ssl: true
+
+        - name: Start Setup AD Controller template 
+          awx.awx.tower_job_launch:
+            job_template: Windows - 2. Setup AD Controller template
+            extra_vars:
+              domain_name: "{{ business_domain_name }}"
+            tower_username: "{{ lookup('env', 'TOWER_USERNAME') }}"
+            tower_password: "{{ lookup('env', 'TOWER_PASSWORD') }}"
+            tower_host: "{{ lookup('env', 'TOWER_HOST') }}"
+            tower_verify_ssl: true
+          register: job 
+
+        - name: Wait for AD Controller setup to complete
+          tower_job_wait:
+            job_id: "{{ job.id }}"
+            timeout: 1600
