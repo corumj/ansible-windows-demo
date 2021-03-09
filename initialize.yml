@@ -3,9 +3,15 @@
   hosts: localhost
   connection: local 
   vars:
+    group_name: ad_server
+    short_desc: business
+    server_env: test 
+    server_os: windows
+    business_domain_name: "{{ survey_business_domain_name }}"
+    # Init windows domain admin password section:
     win_initial_password: "{{ survey_win_init_password }}"
     win_initial_password_verify: "{{ survey_win_init_password_verify }}"
-    ad_regex: '(?=^.{8,}$)(?=.*\d)(?=.*[!@#$%^&*]+)(?![.\n])(?=.*[A-Z])(?=.*[a-z]).*$'
+    ad_regex: '(?=^.{8,}$)(?=.*\d)(?=.*[~!@#$%^&*_\-+=`|\\(){}[\]:;"'<>,.?/]+)(?![.\n])(?=.*[A-Z])(?=.*[a-z]).*$' # thanks https://github.com/deversmann!
     valid_password: "{{ win_initial_password | regex_search(ad_regex) }}"
       # This enforces some simple rules for the password:
       #     1. Password length must be at least 8 characters 
@@ -13,15 +19,55 @@
       #     3. Password must contain one or more lowercase characters 
       #     4. Password must contain one or more numeric values 
       #     5. Password must contain one ore more special characters 
+      # got the idea from here and the regex from Damien: https://www.computerworld.com/article/2833081/how-to-validate-password-strength-using-a-regular-expression.html
   tasks:
     - name: Validate password 
       block:
-      - name: Check that passwords match
-        fail:
-          msg: "Entered passwords do not match, please try again."
-        failed_when: win_initial_password != win_initial_password_verify
+        - name: Check that passwords match
+          fail:
+            msg: "Entered passwords do not match, please try again."
+          failed_when: win_initial_password != win_initial_password_verify
 
-      - name: Check that passwords meet required complexity
-        fail:
-          msg: "Entered password does not meet required complexity, please try again."
-        failed_when: valid_password == ""
+        - name: Check that passwords meet required complexity
+          fail:
+            msg: "Entered password does not meet required complexity, please try again."
+          failed_when: valid_password == ""
+
+    - name: Create Windows demo environment
+      block:
+        - name: Find AWS User information
+          amazon.aws.aws_caller_info:
+            profile: "{{ aws_profile | default('') }}"
+            region: "{{ aws_region }}"
+            aws_access_key: "{{ lookup('env', 'AWS_ACCESS_KEY_ID') }}"
+            aws_secret_key: "{{ lookup('env', 'AWS_SECRET_ACCESS_KEY') }}"
+          register: user
+
+        - name: Spin up a Windows server for AD Domain Services 
+          awx.awx.tower_job_launch:
+            job_template: 2. Provision
+            extra_vars:
+              survey_group_name: "{{ group_name }}"
+              survey_short_desc: "{{ short_desc }}"
+              survey_server_env: "{{ server_env }}" 
+              survey_server_os: "{{ server_os }}"
+              survey_business_domain_name: "{{ business_domain_name }}"
+            tower_username: "{{ lookup('env', 'TOWER_USERNAME') }}"
+            tower_password: "{{ lookup('env', 'TOWER_PASSWORD') }}"
+            tower_host: "{{ lookup('env', 'TOWER_HOST') }}"
+            tower_verify_ssl: true
+          register: job 
+
+        - name: Wait for Windows server to provision
+          tower_job_wait:
+            job_id: "{{ job.id }}"
+            timeout: 1600
+
+        - name: Refresh Inventory 
+          meta: refresh_inventory
+
+- name: Setup AD Domain Services 
+  hosts: ad_server 
+  gather_facts: false
+  roles:
+    - windows-ad-controller

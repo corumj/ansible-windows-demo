@@ -1,4 +1,0 @@
----
-aws_instance_type: t2.medium 
-aws_windows_ami: ami-0229f7666f517b31e
-aws_linux_ami: ami-096fda3c22c1c990a

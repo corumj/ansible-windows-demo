@@ -1,22 +1,22 @@
 ---
 
-server_name: "{{ business_domain_name }}-{{ server_env }}-{{ server_os }}-{{ short_desc }}"
+# server_name: "{{ business_domain_name }}-{{ server_env }}-{{ server_os }}-{{ short_desc }}"
 
-win_initial_password: "{{ survey_win_initial_password | default('Redhat1!') }}" # "{{ lookup('password','/dev/null length=15') }}"
+# win_initial_password: "{{ survey_win_initial_password | default('Redhat1!') }}"
 
 # static, please don't change below unless you want a challenge
  
-app: ansible-demo-{{ business_domain_name }}
-aws_key_name: ansible-demo-key-{{ business_domain_name }}
-id: "ansible-{{ business_domain_name }}"
+# app: ansible-demo-{{ business_domain_name }}
+# aws_key_name: ansible-demo-key-{{ business_domain_name }}
+# id: "ansible-{{ business_domain_name }}"
 
-region: us-east-1
+# region: us-east-1
 
 # for setting up domain controller
 upstream_dns_1: 8.8.8.8
 upstream_dns_2: 8.8.4.4
 dc_hostname: 'dc01'
 ntp_servers: "0.us.pool.ntp.org,1.us.pool.ntp.org"
-recovery_password: 'P@ssw0rd'
+recovery_password: "{{ win_initial_password }}"
 reverse_dns_zone: "10.0.0.0/16"
 reverse_dns_zone_name: "0.10.in-addr.arpa"
