@@ -26,13 +26,9 @@
       - name: Fail if passwords don't match
         fail:
           msg: "Entered passwords do not match, please try again."
-        when: 
-          - win_initial_password != win_initial_password_verify
-          - valid_password | bool
+        when: win_initial_password != win_initial_password_verify
 
       - name: Fail if passwords doesn't meet required complexity
         fail:
           msg: "Entered password does not meet required complexity, please try again."
-        when: 
-          - win_initial_password != win_initial_password_verify
-          - valid_password | bool
+        when: valid_password | bool
