@@ -7,7 +7,7 @@
     win_initial_password_verify: "{{ survey_win_init_password_verify }}"
     ad_regex: '(?=^.{8,}$)(?=.*\d)(?=.*[!@#$%^&*]+)(?![.\n])(?=.*[A-Z])(?=.*[a-z]).*$'
     escaped_regex: "{{ ad_regex | regex_escape() }}"
-    valid_password: "{{ win_initial_password | regex_search(escaped_regex) }}"
+    valid_password: "{{ win_initial_password | regex_search(escaped_regex, '\\1') }}"
       # This enforces some simple rules for the password:
       #     1. Password length must be at least 8 characters 
       #     2. Password must contain one or more uppercase characters 
@@ -26,9 +26,9 @@
       - name: Fail if passwords don't match
         fail:
           msg: "Entered passwords do not match, please try again."
-        when: win_initial_password != win_initial_password_verify
+        failed_when: win_initial_password != win_initial_password_verify
 
       - name: Fail if passwords doesn't meet required complexity
         fail:
           msg: "Entered password does not meet required complexity, please try again."
-        when: valid_password | bool
+        failed_when: valid_password | bool
