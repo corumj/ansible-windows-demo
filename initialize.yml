@@ -55,11 +55,22 @@
             job_id: "{{ job.id }}"
             timeout: 1600
 
-        - name: Refresh Inventory 
-          meta: refresh_inventory
-
-- name: Setup AD Domain Services 
-  hosts: tag_ad_server 
-  gather_facts: false
-  roles:
-    - windows-ad-controller
+        - name: Create Windows - 2. Setup AD Controller template
+          awx.awx.tower_job_template:
+            name: "Windows - 2. Setup AD Controller template"
+            job_type: "run"
+            inventory: AWS
+            project: Windows
+            playbook: "ad-controller-setup.yml"
+            organization: Default 
+            credentials: 
+              - "Tower Credential"
+              - "AWS"
+              - "AWS Windows"
+            # survey_enabled: yes 
+            # survey_spec: "{{ lookup('file', 'windows.json') }}"
+            state: "present"
+            tower_username: "{{ lookup('env', 'TOWER_USERNAME') }}"
+            tower_password: "{{ lookup('env', 'TOWER_PASSWORD') }}"
+            tower_host: "{{ lookup('env', 'TOWER_HOST') }}"
+            tower_verify_ssl: true
