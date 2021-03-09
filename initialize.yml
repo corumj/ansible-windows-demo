@@ -5,15 +5,16 @@
   vars:
     win_initial_password: "{{ survey_win_init_password }}"
     win_initial_password_verify: "{{ survey_win_init_password_verify }}"
-    escape_regex: "{{ '^(?=.*[\d])(?=.*[A-Z])(?=.*[a-z])(?=.*[@#$])[\w\d@#$]{6,12}$' | regex_escape() }}"
-    valid_password: "{{ win_initial_password | regex_search(escape_regex) }}"
+    ad_regex: '^(?=.*[\d])(?=.*[A-Z])(?=.*[a-z])(?=.*[@#$])[\w\d@#$]{6,12}$'
+    escaped_regex: "{{ ad_regex | regex_escape() }}"
+    valid_password: "{{ win_initial_password | regex_search(escaped_regex) }}"
   tasks:
     - name: print valid password and escaped regex 
       debug:
         var:
           - escape_regex
           - valid_password
-          
+
     - name: Fail if passwords don't match
       fail:
         msg: "Entered passwords do not match, please try again."
