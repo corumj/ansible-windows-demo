@@ -11,6 +11,7 @@
 # id: "ansible-{{ business_domain_name }}"
 
 # region: us-east-1
+aws_profile: saml
 
 # for setting up domain controller
 upstream_dns_1: 8.8.8.8
