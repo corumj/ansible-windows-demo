@@ -11,13 +11,13 @@
   tasks:
     - name: print valid password and escaped regex 
       debug:
-        var:
-          - escape_regex
-          - valid_password
+        msg:
+          - "Escaped: {{ escaped_regex }}"
+          - "Valid: {{ valid_password }}"
 
     - name: Fail if passwords don't match
       fail:
         msg: "Entered passwords do not match, please try again."
       when: 
         - win_initial_password != win_initial_password_verify
-        - valid_password
+        - valid_password | bool
