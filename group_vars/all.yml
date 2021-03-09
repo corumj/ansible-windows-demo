@@ -10,8 +10,8 @@
 # aws_key_name: ansible-demo-key-{{ business_domain_name }}
 # id: "ansible-{{ business_domain_name }}"
 
-# region: us-east-1
-aws_profile: saml
+# aws_region: us-east-1
+# aws_profile: saml
 
 # for setting up domain controller
 upstream_dns_1: 8.8.8.8
