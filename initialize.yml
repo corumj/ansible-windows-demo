@@ -5,19 +5,34 @@
   vars:
     win_initial_password: "{{ survey_win_init_password }}"
     win_initial_password_verify: "{{ survey_win_init_password_verify }}"
-    ad_regex: '(?=^[A-Za-z\d!@#\$%\^&\*\(\)_\+=]{8,20}$)((?=.*\d)(?=.*[A-Z])(?=.*[a-z])|(?=.*\d)(?=.*[!@#\$%\^&\*\(\)_\+=])(?=.*[a-z])|(?=.*[!@#\$%\^&\*\(\)_\+=])(?=.*[A-Z])(?=.*[a-z])|(?=.*\d)(?=.*[A-Z])(?=.*[!@#\$%\^&\*\(\)_\+=]))^.*'
+    ad_regex: '(?=^.{8,}$)(?=.*\d)(?=.*[!@#$%^&*]+)(?![.\n])(?=.*[A-Z])(?=.*[a-z]).*$'
     escaped_regex: "{{ ad_regex | regex_escape() }}"
     valid_password: "{{ win_initial_password | regex_search(escaped_regex) }}"
+      # This enforces some simple rules for the password:
+      #     1. Password length must be at least 8 characters 
+      #     2. Password must contain one or more uppercase characters 
+      #     3. Password must contain one or more lowercase characters 
+      #     4. Password must contain one or more numeric values 
+      #     5. Password must contain one ore more special characters 
   tasks:
-    - name: print valid password and escaped regex 
-      debug:
-        msg:
-          - "Escaped: {{ escaped_regex }}"
-          - "Valid: {{ valid_password }}"
+    - name: Validate password 
+      block:
+      - name: print valid password and escaped regex 
+        debug:
+          msg:
+            - "Escaped: {{ escaped_regex }}"
+            - "Valid: {{ valid_password }}"
 
-    - name: Fail if passwords don't match
-      fail:
-        msg: "Entered passwords do not match, please try again."
-      when: 
-        - win_initial_password != win_initial_password_verify
-        - valid_password | bool
+      - name: Fail if passwords don't match
+        fail:
+          msg: "Entered passwords do not match, please try again."
+        when: 
+          - win_initial_password != win_initial_password_verify
+          - valid_password | bool
+
+      - name: Fail if passwords doesn't meet required complexity
+        fail:
+          msg: "Entered password does not meet required complexity, please try again."
+        when: 
+          - win_initial_password != win_initial_password_verify
+          - valid_password | bool
