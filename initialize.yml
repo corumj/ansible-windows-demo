@@ -59,7 +59,7 @@
           meta: refresh_inventory
 
 - name: Setup AD Domain Services 
-  hosts: ad_server 
+  hosts: tag_ad_server 
   gather_facts: false
   roles:
     - windows-ad-controller
