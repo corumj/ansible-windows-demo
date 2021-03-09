@@ -11,7 +11,7 @@
     # Init windows domain admin password section:
     win_initial_password: "{{ survey_win_init_password }}"
     win_initial_password_verify: "{{ survey_win_init_password_verify }}"
-    ad_regex: '(?=^.{8,}$)(?=.*\d)(?=.*[~!@#$%^&*_\-+=`|\\(){}[\]:;"'<>,.?/]+)(?![.\n])(?=.*[A-Z])(?=.*[a-z]).*$' # thanks https://github.com/deversmann!
+    ad_regex: '(?=^.{8,}$)(?=.*\d)(?=.*[~!@#$%^&*_\-+=\`|\\(){}[\]:;\"\'<>,.?/]+)(?![.\n])(?=.*[A-Z])(?=.*[a-z]).*$' # thanks https://github.com/deversmann!
     valid_password: "{{ win_initial_password | regex_search(ad_regex) }}"
       # This enforces some simple rules for the password:
       #     1. Password length must be at least 8 characters 
