@@ -57,7 +57,7 @@
 
         - name: Start Setup AD Controller template 
           awx.awx.tower_job_launch:
-            job_template: Windows - 2. Setup AD Controller template
+            job_template: Windows - 2. Setup AD Controller template (auto runs after init)
             extra_vars:
               domain_name: "{{ business_domain_name }}"
             tower_username: "{{ lookup('env', 'TOWER_USERNAME') }}"
