@@ -157,22 +157,22 @@
     - "{{ users }}"
 
 # This section will create our OU and uses DSC
-# - name: Install latest nuget (required for DSC Resource Kit)
-#   win_shell: install-packageprovider -name nuget -force
+- name: Install latest nuget (required for DSC Resource Kit)
+  win_shell: install-packageprovider -name nuget -force
 
-# - name: Install xActiveDirectory PS Module 
-#   win_psmodule:
-#     name: ActiveDirectoryDSC
-#     state: present 
+- name: Install xActiveDirectory PS Module 
+  win_psmodule:
+    name: ActiveDirectoryDSC
+    state: present 
 
-# - name: Create a Server OU 
-#   win_dsc:
-#     resource_name: ADOrganizationalUnit
-#     name: "Servers"
-#     path: "DC=demo,DC=lab"
+- name: Create a Server OU 
+  win_dsc:
+    resource_name: ADOrganizationalUnit
+    name: "Servers"
+    path: "DC=demo,DC=lab"
 
-# - name: Create an Ansible OU 
-#   win_dsc:
-#     resource_name: ADOrganizationalUnit
-#     name: "Ansible"
-#     path: "OU=Servers,DC=demo,DC=lab"
+- name: Create an Ansible OU 
+  win_dsc:
+    resource_name: ADOrganizationalUnit
+    name: "Ansible"
+    path: "OU=Servers,DC=demo,DC=lab"
