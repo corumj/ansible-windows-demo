@@ -129,7 +129,7 @@
     account_locked: no 
     groups:
       - Domain Admins 
-    password: "{{ win_initial_password }}"
+    password: "{{ ansible_password }}"
     update_password: on_create 
     password_expired: false 
     firstname: ansibleadmin 

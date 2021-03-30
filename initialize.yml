@@ -60,7 +60,6 @@
             job_template: Windows - 2. Setup AD Controller template (auto runs after init)
             extra_vars:
               domain_name: "{{ business_domain_name }}"
-              win_initial_password: "{{ win_initial_password | password_hash('sha512') }}"
             tower_username: "{{ lookup('env', 'TOWER_USERNAME') }}"
             tower_password: "{{ lookup('env', 'TOWER_PASSWORD') }}"
             tower_host: "{{ lookup('env', 'TOWER_HOST') }}"
