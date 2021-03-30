@@ -1,0 +1,26 @@
+---
+- name: Provision Business
+  hosts: localhost 
+  connection: local 
+  gather_facts: false
+  tasks:
+    - name: Find AWS User information
+      amazon.aws.aws_caller_info:
+        profile: "{{ aws_profile }}"
+      register: user
+
+    - name: pull domain server instance info for setting up ADDS
+      community.aws.ec2_instance_info:
+        region: "{{ region }}"
+        aws_access_key: "{{ lookup('env', 'AWS_ACCESS_KEY_ID') }}"
+        aws_secret_key: "{{ lookup('env', 'AWS_SECRET_ACCESS_KEY') }}"
+        filters:
+          "tag:group_name": ad_server
+          "tag:user": "{{ user.user_id | regex_search(':(.*)', '\\1') | join('') }}" 
+          # "tag:business_domain_name": "{{ business_domain_name }}"
+          instance-state-name: ["running"]
+      register: ad
+
+    - name: Debug 
+      debug:
+        var: ad
