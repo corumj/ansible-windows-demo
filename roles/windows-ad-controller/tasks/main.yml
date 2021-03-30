@@ -50,7 +50,7 @@
 - name: Create Domain 
   ansible.windows.win_domain:
     dns_domain_name: '{{ domain_name }}.lab'
-    safe_mode_password: '{{ recovery_password }}'
+    safe_mode_password: '{{ ansible_password }}'
   register: domain 
 
 - name: Reboot 
