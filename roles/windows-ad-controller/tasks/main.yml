@@ -170,11 +170,11 @@
     resource_name: ADOrganizationalUnit
     ensure: Present
     name: "Servers"
-    path: "DC=demo,DC=lab"
+    path: "DC={{ domain_name }},DC=lab"
 
 - name: Create an Ansible OU 
   win_dsc:
     resource_name: ADOrganizationalUnit
     ensure: Present
     name: "Ansible"
-    path: "OU=Servers,DC=demo,DC=lab"
+    path: "OU=Servers,DC={{ domain_name }},DC=lab"
