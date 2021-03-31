@@ -5,4 +5,4 @@
   tasks:
     - name: debug 
       debug:
-        msg: "{{ hostvars['ad_server']"
+        msg: "{{ hostvars['ad_server'] }}"
